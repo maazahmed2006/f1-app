@@ -1,16 +1,32 @@
-# f1_app
+# 🏎️ F1 Stats App
 
-A new Flutter project.
+A Flutter-based Formula 1 app that displays driver standings, race results, and upcoming features like live race tracking.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 📊 Driver Standings
+- 🏁 Race Results
+- 📅 Season Schedule
+- Driver Career Stats
+- ⚡ Fast API integration (Jolpica / Ergast)
+- 🔄 Future: Live lap tracking & telemetry
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Tech Stack
+
+- Flutter (Frontend)
+- Dart
+- REST APIs (Jolpica / Ergast)
+  
+---
+
+## ⚙️ Installation
+
+```bash
+git clone https://github.com/maazahmed2006/f1-app.git
+cd f1-app
+flutter pub get
+flutter run
