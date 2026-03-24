@@ -23,6 +23,9 @@ A Flutter-based Formula 1 app that displays driver standings, race results, and 
   
 ---
 
+<img width="1920" height="1080" alt="Screenshot (815)" src="https://github.com/user-attachments/assets/9d590f00-63c3-4817-84aa-945d783994d2" />
+
+
 ## ⚙️ Installation
 
 ```bash
