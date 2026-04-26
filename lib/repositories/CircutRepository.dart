@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class CircuitModelRepository {
 
   Future <List<Offset>> getCircutModel() async {
-    final url = Uri.parse('http://192.168.18.11:8080/circuit');
+    final url = Uri.parse('YOUR-BACKEND-URL);
     final List<CircuitModel> results = [];
 
     try {
