@@ -28,7 +28,7 @@ Lap-by-lap telemetry insights
 - Dart
 - REST APIs (Jolpica / Ergast)
 - Python (FastAPI)
-- FASTF1 Package 
+- FASTF1 Packag
   
 ---
 
