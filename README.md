@@ -6,12 +6,19 @@ A Flutter-based Formula 1 app that displays driver standings, race results, and 
 
 ## 🚀 Features
 
-- 📊 Driver Standings
-- 🏁 Race Results
-- 📅 Season Schedule
-- Driver Career Stats
-- ⚡ Fast API integration (Jolpica / Ergast)
-- 🔄 Future: Live lap tracking & telemetry
+🚀 Features
+📊 Driver Standings
+🏁 Race Results
+📅 Season Schedule
+👤 Driver Career Stats
+⚡ Fast API integration (Jolpica / Ergast)
+🏎️ Live Leaderboard (Real-time race positions)
+📡 Full Race Telemetry System
+Pit-in / Pit-out tracking
+Driver retirements monitoring
+Real-time race position updates
+Lap-by-lap telemetry insights
+🔄 Future: Advanced live race analytics & predictions
 
 ---
 
@@ -20,6 +27,8 @@ A Flutter-based Formula 1 app that displays driver standings, race results, and 
 - Flutter (Frontend)
 - Dart
 - REST APIs (Jolpica / Ergast)
+- Python (FastAPI)
+- FASTF1 Package 
   
 ---
 
