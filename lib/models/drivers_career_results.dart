@@ -6,6 +6,7 @@ class DriverRaceResult {
   final String points;
   final String grid;
   final String status;
+  final String driverCode;
 
   DriverRaceResult({
     required this.season,
@@ -15,6 +16,7 @@ class DriverRaceResult {
     required this.points,
     required this.grid,
     required this.status,
+    required this.driverCode ,
   });
 
   factory DriverRaceResult.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class DriverRaceResult {
       points: result['points'] ?? '0',
       grid: result['grid'] ?? 'N/A',
       status: result['status'] ?? 'N/A',
+      driverCode: result ['Driver']['code'] ?? '',
     );
   }
 }

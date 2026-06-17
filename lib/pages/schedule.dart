@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:f1_app/pages/DriversAnimationPage.dart';
 import 'package:f1_app/providers/yearListProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/season_providers.dart';
 import '../models/season_model.dart';
 import '../models/winners_model.dart';
-import '../utils/countries_flag.dart';
 
 DateTime? _parseRaceDateTime(String date, String? time) {
   try {
@@ -189,51 +190,51 @@ class _ExpandableRaceCardState extends State<_ExpandableRaceCard> {
         children: [
 
           // ── LAYER 1: Flag image fills the entire card background ──
-          Positioned.fill(
-            child: ShaderMask(
-              shaderCallback: (rect) => LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Colors.black.withValues(alpha: 0.6),
-                  Colors.transparent,
-                ],
-                stops: const [0.2, 0.8],
-              ).createShader(rect),
-              blendMode: BlendMode.overlay,
-              child: Flags().getFlag(race.country) != null
-                  ? Image.network(
-                "${Flags().getFlag(race.country)}",
-                fit: BoxFit.cover,
-                alignment: Alignment.centerRight, // flag shows on right side
-              )
-                  : const SizedBox.shrink(),
-            ),
-          ),
-
+          // Positioned.fill(
+          //   child: ShaderMask(
+          //     shaderCallback: (rect) => LinearGradient(
+          //       begin: Alignment.centerLeft,
+          //       end: Alignment.centerRight,
+          //       colors: [
+          //         Colors.black.withValues(alpha: 0.9),
+          //         Colors.transparent,
+          //       ],
+          //       stops: const [0.3, 1],
+          //     ).createShader(rect),
+          //     blendMode: BlendMode.saturation,
+          //     child: Flags().getFlag(race.country) != null
+          //         ? Image.network(
+          //       "${Flags().getFlag(race.country)}",
+          //       fit: BoxFit.fill,
+          //       // alignment: Alignment.centerRight, // flag shows on right side
+          //     )
+          //         : const SizedBox.shrink(),
+          //   ),
+          // ),
+          //
           // ── LAYER 2: Dark tint so flag doesn't overpower content ──
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Colors.black.withValues(alpha: 1), // dark on left (text side)
-                    Colors.black.withValues(alpha: 0.3), // lighter on right (flag side)
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Positioned.fill(
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //         begin: Alignment.centerLeft,
+          //         end: Alignment.centerRight,
+          //         colors: [
+          //           Colors.black.withValues(alpha: 0.9), // dark on left (text side)
+          //           Colors.black.withValues(alpha: 0.9), // lighter on right (flag side)
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
 
           // ── LAYER 3: Frosted glass ON TOP of the flag ──
           BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 1),
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06), // glass tint
+                color: Colors.white.withValues(alpha: 0.03), // glass tint
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: Colors.white.withValues(alpha: 0.12),
@@ -295,10 +296,51 @@ class _ExpandableRaceCardState extends State<_ExpandableRaceCard> {
                                 ],
                               ),
                               const SizedBox(height: 8),
+
                               if (_isCompleted)
                                 _completedBadge()
                               else if (_showCountdown)
                                 _upcomingBadge(),
+
+                              const SizedBox(height: 8),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+
+                                ),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(80, 30),
+                                    backgroundColor: const Color(0xFFE10600),
+                                    elevation: 20,
+                                    shadowColor: const Color(0xFFE10600),
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: BorderSide(
+                                        color: Colors.white.withValues(alpha: 0.2),
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DriverCardsAnimation(),
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    'WATCH RACE',
+                                    style: GoogleFonts.orbitron(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10,
+                                      letterSpacing: 1.5,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),

@@ -8,7 +8,9 @@ class DriverTelemetry {
   final int gridPosition ;
   final double lapStartTime;
   final double lapDuration;
-  List <Offset> points = [] ;
+  final  pitInTime;
+  final  pitOutTime;
+  List <Offset?>points = [] ;
 
 
   DriverTelemetry({
@@ -18,19 +20,33 @@ class DriverTelemetry {
     required this.gridPosition ,
     required this.lapStartTime ,
     required this.lapDuration ,
+    required this.pitInTime ,
+    required this.pitOutTime ,
     required this.points ,
 });
 
 
   factory DriverTelemetry.fromJson(Map<String , dynamic> json) {
-      return DriverTelemetry(
-          driverName: json['driver'],
-          color: json['color'],
-          driverNumber: json['driverNumber'],
-          gridPosition: json['gridPosition'],
-          lapStartTime: json['lapStartTime'],
-          lapDuration: json['lapDuration'] ,
-          points : (json['points'] as List ).map((points) => Offset(points['X'] as double, points['Y'] as double)).toList(),
-      );
+    return DriverTelemetry(
+      driverName: json['driver'],
+      color: json['color'],
+      driverNumber: json['driverNumber'],
+      gridPosition: json['gridPosition'],
+      lapStartTime: (json['lapStartTime'] as num).toDouble(),
+      pitInTime: json['pitInTime'],
+      pitOutTime: json['pitOutTime'],
+      lapDuration: (json['lapDuration'] as num).toDouble(),
+
+      points: (json['points'] as List).map((point) {
+        if (point == null || point['X'] == null || point['Y'] == null) {
+          return null;
+        }
+
+        return Offset(
+          (point['X'] as num).toDouble(),
+          (point['Y'] as num).toDouble(),
+        );
+      }).toList(),
+    );
   }
 }

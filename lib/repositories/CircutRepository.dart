@@ -10,14 +10,18 @@ import 'package:http/http.dart' as http;
 class CircuitModelRepository {
 
   Future <List<Offset>> getCircutModel() async {
+<<<<<<< HEAD
     final url = Uri.parse('YOUR-BACKEND-URL);
+=======
+    final url = Uri.parse('http://192.168.18.12:8080/circuit');
+>>>>>>> aa0ca06 (Add Starting Grid Animation with Driver Cards)
     final List<CircuitModel> results = [];
 
     try {
       final response = await http.get(url).timeout(Duration(seconds: 10));
       if (response.statusCode == 200){
         final responseBody = jsonDecode(response.body);
-        final data = responseBody;
+        final data = responseBody; 
 
         for (var item in data) {
           results.add(CircuitModel.fromJson(item));

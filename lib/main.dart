@@ -1,4 +1,5 @@
 import 'package:f1_app/pages/Circut_Page.dart';
+import 'package:f1_app/pages/DriversAnimationPage.dart';
 import 'package:f1_app/pages/main_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: RacePage(),
+      home: MainShell(),
     );
   }
 }

@@ -1,5 +1,6 @@
 class DriverStanding {
   final String driverId;
+  final String driverCode;
   final String position;
   final String points;
   final String wins;
@@ -12,6 +13,7 @@ class DriverStanding {
   DriverStanding({
     required this.driverId,
     required this.position,
+    required this.driverCode,
     required this.points,
     required this.wins,
     required this.givenName,
@@ -25,6 +27,7 @@ class DriverStanding {
     return DriverStanding(
       driverId: json['Driver']['driverId'] ?? '',
       position: json['position'] ?? '',
+      driverCode: json['Driver']['code'] ?? '' ,
       points: json['points'] ?? '',
       wins: json['wins'] ?? '',
       givenName: json['Driver']['givenName'],

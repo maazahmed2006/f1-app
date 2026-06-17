@@ -97,9 +97,7 @@ class _StandingsScreenState extends ConsumerState<StandingsScreen> {
               ],
             ),
           ),
-          // ── REST OF YOUR CODE STAYS EXACTLY THE SAME ──
           const SizedBox(height: 15),
-          // ... tab buttons, expanded content etc
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
                 child: BackdropFilter(
