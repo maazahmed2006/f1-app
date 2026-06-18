@@ -320,11 +320,7 @@ class DriverState {
   }
 
   double raceProgress() {
-    final points = currentTelemetry.points;
-    if (points.isEmpty) return 0;
-
-    final currentTrackIndex = animationController.value * (points.length - 1);
-    return (currentLap * 100000) + currentTrackIndex;
+    return currentLap + animationController.value;
   }
 
   void dispose() {
@@ -504,13 +500,8 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
 
   Widget _buildLeaderboardDrawer() {
     final sorted = [...drivers];
+    sorted.sort((a, b) => b.raceProgress().compareTo(a.raceProgress()));
 
-    sorted.sort((a, b) {
-      if (a.currentLap != b.currentLap) {
-        return b.currentLap.compareTo(a.currentLap);
-      }
-      return b.currentIndex.compareTo(a.currentIndex);
-    });
     return Drawer(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -549,62 +540,128 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                     itemCount: sorted.length,
                     itemBuilder: (context, index) {
                       final d = sorted[index];
+                      final telemetry = d.currentTelemetry;
                       final color = Color(
-                        int.parse(
-                          d.currentTelemetry.color.replaceAll('#', '0xFF'),
-                        ),
+                        int.parse(telemetry.color.replaceAll('#', '0xFF')),
                       );
 
+                      final int safeIndex = d.currentIndex.clamp(
+                        0,
+                        telemetry.speeds.isEmpty ? 0 : telemetry.speeds.length - 1,
+                      );
+                      final double? currentSpeed =
+                      telemetry.speeds.isEmpty ? null : telemetry.speeds[safeIndex];
+
+                      final compound = telemetry.compound ?? '?';
+                      final tyreLife = telemetry.tyreLife;
+
+                      final Color compoundColor = switch (compound.toUpperCase()) {
+                        'SOFT'   => const Color(0xFFE8002D),
+                        'MEDIUM' => const Color(0xFFFFD514),
+                        'HARD'   => Colors.white,
+                        'INTER'  => const Color(0xFF39B54A),
+                        'WET'    => const Color(0xFF0067FF),
+                        _        => Colors.grey,
+                      };
+
                       return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 10,
-                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1),
-                          ),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                         ),
                         child: Row(
                           children: [
-                            Text(
-                              '${index + 1}',
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.6),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            SizedBox(
+                              width: 20,
+                              child: Text(
+                                '${index + 1}',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 6),
+                            Container(
+                              width: 3,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: color,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
                             Expanded(
-                              child: Text(
-                                d.currentTelemetry.driverName,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    telemetry.driverName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if (currentSpeed != null)
+                                    Text(
+                                      '${currentSpeed.toInt()} km/h',
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(alpha: 0.5),
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
+                              width: 22,
+                              height: 22,
                               decoration: BoxDecoration(
-                                color: color.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(4),
+                                shape: BoxShape.circle,
+                                color: compoundColor.withValues(alpha: 0.15),
+                                border: Border.all(color: compoundColor, width: 1.5),
                               ),
-                              child: Text(
-                                'L${d.currentLap}',
-                                style: TextStyle(color: color, fontSize: 11),
+                              child: Center(
+                                child: Text(
+                                  compound.isEmpty ? '?' : compound[0].toUpperCase(),
+                                  style: TextStyle(
+                                    color: compoundColor,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
+                            ),
+                            const SizedBox(width: 6),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    'L${d.currentLap}',
+                                    style: TextStyle(color: color, fontSize: 10),
+                                  ),
+                                ),
+                                if (tyreLife != null)
+                                  Text(
+                                    '${tyreLife}L old',
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.4),
+                                      fontSize: 9,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ],
                         ),
@@ -619,7 +676,6 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
       ),
     );
   }
-
   @override
   void dispose() {
     for (final driver in drivers) {

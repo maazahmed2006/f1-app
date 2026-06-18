@@ -75,14 +75,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               if (firstRace != null)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: Colors.white.withValues(alpha: 0.02),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.transparent.withValues(alpha: 0.05)),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.09)),
                       ),
                       child: Stack(
                         children: [
@@ -156,7 +154,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ],
                       ),
                     ),
-                  ),
                 ),
 
               const SizedBox(height: 28),

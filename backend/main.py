@@ -16,7 +16,9 @@ class F1Telemetry:
         self.total_laps   = int(self.session.laps['LapNumber'].max())
         self.data= {}
          
-        
+    def display(self):
+        print(self.gridPosition)
+    
     def lap_process(self, lap_num):
         self.data[str(lap_num)] = []
         for _, row in self.gridPosition.iterrows():
@@ -33,61 +35,66 @@ class F1Telemetry:
                 if lap_data.empty:                         
                     continue  
 
-                
+
+                compound = lap_data['Compound'].iloc[0]
+                tyre_life = lap_data['TyreLife'].iloc[0]
+                fresh_tyre = lap_data['FreshTyre'].iloc[0]
+                pit_in_raw = lap_data['PitInTime'].iloc[0]
+
+                if (lap_num + 1) <= self.total_laps:
+                    next_lap_data = laps.pick_laps(lap_num + 1)
+                    if next_lap_data.empty:
+                        pit_out_raw = None
+            
+
+                    else:
+                        pit_out_raw = next_lap_data['PitOutTime'].iloc[0]
+                else:
+                    pit_out_raw = None
+
+                lap_time = lap_data['LapTime'].iloc[0]
+                lap_start_time = lap_data['LapStartTime'].iloc[0]
+
+
+                lap_duration = 120.0 if pd.isna(lap_time) else lap_time.total_seconds()
+                lap_start_seconds = None if pd.isna(lap_start_time) else lap_start_time.total_seconds()
+
+                pit_in  = None if pd.isna(pit_in_raw)  else (pit_in_raw  - lap_start_time).total_seconds()
+                pit_out = None if pd.isna(pit_out_raw) else (pit_out_raw - lap_start_time).total_seconds()
+
 
                 telemetry = lap_data.get_telemetry()
+
                 if telemetry.empty:
                     continue
 
                 telemetry = telemetry.iloc[::5]
-                telemetry = telemetry.dropna(subset=['X', 'Y'])
+                telemetry = telemetry.dropna(subset=['X', 'Y', 'Speed'])
                 
+
                 if telemetry.empty:
                     continue
                     
                 x_vals = telemetry['X'].tolist()
                 y_vals = telemetry['Y'].tolist()
+                speed = telemetry['Speed'].tolist()
 
-                # getting the pit in and pit out time 
-                pit_in = lap_data['PitInTime'].iloc[0]
-
-                if (lap_num + 1) <= self.total_laps:
-                    next_lap_data = laps.pick_laps(lap_num + 1)
-                    if next_lap_data.empty:
-                        pit_out = None
-
-                    else:
-                        pit_out = next_lap_data['PitOutTime'].iloc[0]
-                else:
-                    pit_out = None
-
-                lap_time = lap_data['LapTime'].iloc[0]
-                cum_time = laps[laps['LapNumber'] <= lap_num]['LapTime'].sum()
-
-                # ✅ Handle crashed laps - create lap_duration variable
-                if pd.isna(lap_time):
-                    lap_duration = 120.0
-                else:
-                    lap_duration = lap_time.total_seconds()
-
-                if pd.isna(cum_time):
-                    cum_time = pd.Timedelta(seconds=0)
-                
-                lap_start_session_time = lap_data['LapStartTime'].iloc[0]
-
-                pit_in  = None if pd.isna(pit_in)  else (pit_in  - lap_start_session_time).total_seconds()
-                pit_out = None if pd.isna(pit_out) else (pit_out - lap_start_session_time).total_seconds()
 
                 self.data[str(lap_num)].append({
                     'driver': driver,
                     'color':  color,
                     'driverNumber': driver_number,
                     'gridPosition': position,
-                    'lapStartTime': (cum_time.total_seconds() - lap_duration),
+                    'lapStartTime': lap_start_seconds,
                     'lapDuration':  lap_duration,
                     'pitInTime':    pit_in, 
                     'pitOutTime':   pit_out, 
-                    'points': [{'X': x, 'Y': y} for x, y in zip(x_vals, y_vals)], 
+                    'points': [{'X': x, 'Y': y, 'speed' : s} for x, y, s in zip(x_vals, y_vals , speed)], 
+                    'tyre' : {
+                        'compound' : compound,
+                        'tyreLife' : None if pd.isna (tyre_life) else int(tyre_life),
+                        'freshTyre' : False if pd.isna(fresh_tyre) else bool(fresh_tyre),
+                    },
                 })
 
             except Exception as e:
@@ -159,6 +166,6 @@ def get_info():
         "drivers": drivers
     }
 
-f1 = F1Telemetry(2026 , 7)
+f1 = F1Telemetry(2026 , 4)
 
-        
+get_lap_batch(start_lap= 1, end_lap= 3)

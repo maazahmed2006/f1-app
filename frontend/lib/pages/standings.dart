@@ -100,8 +100,7 @@ class _StandingsScreenState extends ConsumerState<StandingsScreen> {
           const SizedBox(height: 15),
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.05),
@@ -115,7 +114,6 @@ class _StandingsScreenState extends ConsumerState<StandingsScreen> {
                       ],
                     ),
                   ),
-                ),
               ),
               const SizedBox(height: 5,),
               Expanded(
