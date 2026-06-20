@@ -1,19 +1,22 @@
-class CircuitModel{
-   final double xPosition ;
-   final double yPosition ;
+import 'dart:ui';
+
+class CircuitModel {
+  final List<Offset> circuit;
+  final List<Offset> pitLane;
 
   CircuitModel({
-    required this.xPosition ,
-    required this.yPosition ,
-});
+    required this.circuit,
+    required this.pitLane,
+  });
 
-
-  factory CircuitModel.fromJson (Map<String , dynamic>  json)
-  {
+  factory CircuitModel.fromJson(Map<String, dynamic> json) {
     return CircuitModel(
-        xPosition: (json['X'] as num).toDouble()
-      ,
-        yPosition: (json['Y'] as num).toDouble(),
+      circuit: (json['circuit'] as List)
+          .map((p) => Offset((p['X'] as num).toDouble(), (p['Y'] as num).toDouble()))
+          .toList(),
+      pitLane: (json['pitLane'] as List)
+          .map((p) => Offset((p['X'] as num).toDouble(), (p['Y'] as num).toDouble()))
+          .toList(),
     );
   }
 }

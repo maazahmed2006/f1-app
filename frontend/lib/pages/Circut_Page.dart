@@ -9,8 +9,10 @@ import '../repositories/CircutRepository.dart';
 
 class CircuitPainter extends CustomPainter {
   final List<Offset> coordinates;
+  final List<Offset> pitLaneCoordinates;
 
-  CircuitPainter({required this.coordinates});
+  CircuitPainter({required this.coordinates, required this.pitLaneCoordinates});
+
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -62,7 +64,7 @@ class CircuitPainter extends CustomPainter {
       Paint()
         ..color = Colors.blueGrey.withValues(alpha: 0.15)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 26
+        ..strokeWidth = 10
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
     );
 
@@ -71,7 +73,7 @@ class CircuitPainter extends CustomPainter {
       Paint()
         ..color = Colors.grey.shade700
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 22
+        ..strokeWidth = 6
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round,
     );
@@ -79,7 +81,7 @@ class CircuitPainter extends CustomPainter {
     canvas.drawPath(
       path,
       Paint()
-        ..color = const Color(0xFF2C2C2C)
+        ..color = const Color(0x9E2C2C2C)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 18
         ..strokeCap = StrokeCap.round
@@ -91,15 +93,67 @@ class CircuitPainter extends CustomPainter {
       Paint()
         ..color = Colors.white.withValues(alpha: 0.15)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 4
+        ..strokeWidth = 2
         ..strokeCap = StrokeCap.round
         ..strokeJoin = StrokeJoin.round,
     );
+
+    if (pitLaneCoordinates.isNotEmpty) {
+      final pitPath = Path();
+      pitPath.moveTo(
+        normalize(pitLaneCoordinates.first).dx,
+        normalize(pitLaneCoordinates.first).dy,
+      );
+      for (final p in pitLaneCoordinates.skip(1)) {
+        final n = normalize(p);
+        pitPath.lineTo(n.dx, n.dy);
+      }
+
+      // Offset last = coordinates.last ;
+      // final lastNormalized = normalize(last) ;
+      // path.lineTo(lastNormalized.dx, lastNormalized.dy) ;
+      // Outer glow
+      canvas.drawPath(
+        pitPath,
+        Paint()
+          ..color = Colors.purple.withValues(alpha: 0.3)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 10
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+      );
+
+      // Core line
+      canvas.drawPath(
+        pitPath,
+        Paint()
+          ..color = Colors.purple
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round,
+      );
+
+      // Bright center
+      canvas.drawPath(
+        pitPath,
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.4)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.5
+          ..strokeCap = StrokeCap.round,
+      );
     }
-    @override
-    bool shouldRepaint(CircuitPainter oldDelegate) =>
-        oldDelegate.coordinates != coordinates;
+  }
+
+
+  @override
+  bool shouldRepaint(CircuitPainter oldDelegate) =>
+      oldDelegate.coordinates != coordinates ||
+          oldDelegate.pitLaneCoordinates != pitLaneCoordinates;
 }
+
+
+
 
 class DriverPainter extends CustomPainter {
   final List<Offset> circuitPoints;
@@ -338,6 +392,9 @@ class RacePage extends StatefulWidget {
 
 class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
   List<Offset> coordinates = [];
+  List<Offset> pitLaneCoordinates = [];
+
+
   bool loading = true;
   Map<String, List<DriverTelemetry>> allData = {};
   List<DriverState> drivers = [];
@@ -392,7 +449,9 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
   }
 
   Future<void> _loadCircuit() async {
-    coordinates = await CircuitModelRepository().getCircutModel();
+    final model = await CircuitModelRepository().getCircutModel();
+    coordinates = model.circuit;
+    pitLaneCoordinates = model.pitLane;
   }
 
   @override
@@ -475,7 +534,10 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: MediaQuery.of(context).size.height * 0.7,
                   child: CustomPaint(
-                    painter: CircuitPainter(coordinates: coordinates),
+                    painter: CircuitPainter(
+                      coordinates: coordinates,
+                      pitLaneCoordinates: pitLaneCoordinates,  // add this
+                    ),
                     child: const SizedBox.expand(),
                   ),
                 ),
@@ -508,12 +570,12 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
       child: Container(
         margin: const EdgeInsets.only(left: 60),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
+          color: Colors.white.withValues(alpha: 0.05),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             bottomLeft: Radius.circular(20),
           ),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0)),
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
