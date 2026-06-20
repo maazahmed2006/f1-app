@@ -3,6 +3,9 @@ from fastapi import FastAPI , HTTPException
 import pandas as pd
 import json
 
+# CACHE_DIR = "C:/Users/Hamza 2/Documents/fastf1_cache"
+# fastf1.Cache.enable_cache(CACHE_DIR) 
+
 app = FastAPI()
 
 
@@ -17,7 +20,7 @@ class F1Telemetry:
         self.data= {}
          
     def display(self):
-        print(self.gridPosition)
+        print(self.session.laps.pick_drivers(10))
     
     def lap_process(self, lap_num):
         self.data[str(lap_num)] = []
@@ -29,7 +32,6 @@ class F1Telemetry:
             
             try:
                 laps     = self.session.laps.pick_drivers(driver_number)
-
                 lap_data = laps.pick_laps(lap_num)
 
                 if lap_data.empty:                         
@@ -104,23 +106,82 @@ class F1Telemetry:
     
 
     def get_circut(self):
-
         lap = self.session.laps.pick_fastest()
+
+        pitIn_lap = self.session.laps.dropna(subset=['PitInTime']).iloc[0]
+        pitIn_telemetry = pitIn_lap.get_telemetry().dropna(subset=['X', 'Y'])
+
+        pitOut_lap = self.session.laps[
+            (self.session.laps['DriverNumber'] == pitIn_lap['DriverNumber']) &
+            (self.session.laps['LapNumber'] == pitIn_lap['LapNumber'] + 1) 
+        ].iloc[0]
+        pitOut_telemetry = pitOut_lap.get_telemetry().dropna(subset = ['X' , 'Y'])
+
+
+        driverName = pitIn_lap['DriverNumber']
+
+        pitIn_Time = pitIn_lap['PitInTime']
+        pitOut_Time = pitOut_lap['PitOutTime']
+
+
+        combined = pd.concat([pitIn_telemetry , pitOut_telemetry])
+
+
+        pitLane = combined [
+        (combined['SessionTime'] >= pitIn_Time) & (combined['SessionTime'] <= pitOut_Time)
+        ].iloc[::2]
+
+        pitLanePoints = [
+            {'X' : x , 'Y': y} for x, y in zip(pitLane['X'], pitLane['Y'])
+            ]
 
         circut_telemetry = lap.get_telemetry().iloc[::5]
 
         if circut_telemetry.empty:
-            return 
+            return None
         
         else :
             circut_telemetry = circut_telemetry.dropna(subset=['X', 'Y']) 
             x_vals = circut_telemetry['X'].tolist()
             y_vals = circut_telemetry['Y'].tolist()
-            return [
-            {'X' : x , 'Y' : y} for x , y in zip(x_vals , y_vals)
+            circuitPoints = [
+                {'X' : x , 'Y' : y} for x , y in zip(x_vals , y_vals)
             ]
-        
 
+        return {
+            'driverNumber'  : driverName,
+            'circuit' : circuitPoints,
+            'pitLane' : pitLanePoints
+        }
+        
+        
+    def get_radio(self):
+        raceControlMessage = self.session.race_control_messages
+        radioData = {}
+        print(type(raceControlMessage['Time'].iloc[0]))
+        for i in range(self.total_laps):
+            radioMessage = raceControlMessage[raceControlMessage['Lap'] == i+1]
+            lapRadioData = []
+            lapRadioData.append({
+                'Time' : [t.isoformat() for t in radioMessage['Time']],
+                'Category' : radioMessage['Category'].tolist() ,
+                'Message' : radioMessage['Message'].tolist(),
+                'Sector' : [None if pd.isna(s) else int(s) for s in radioMessage['Sector']],
+            })
+            radioData[str(i+1)] = lapRadioData
+        
+        with open(f"messages.json" , "w") as f:
+            json.dump(radioData , f , indent = 2 )
+
+
+
+
+
+                
+
+
+                
+        
 
 @app.get("/laps/batch/{start_lap}/{end_lap}")
 def get_lap_batch(start_lap: int, end_lap: int):
@@ -145,9 +206,12 @@ def load_circut():
 
     if data is None: 
         raise HTTPException(status_code = 404 , detail = 'Circut Data Not Found' )
-    
+         
     else:
+        # with open(f"circuit.json" , "w") as f: 
+            # json.dump(data , f, indent=2)
         return data
+    
 
 @app.get("/info")
 def get_info():
@@ -166,6 +230,6 @@ def get_info():
         "drivers": drivers
     }
 
-f1 = F1Telemetry(2026 , 4)
 
-get_lap_batch(start_lap= 1, end_lap= 3)
+f1 = F1Telemetry(2026 ,  4)
+f1.get_radio()
