@@ -8,7 +8,6 @@ import json
 
 app = FastAPI()
 
-
 class F1Telemetry:
     def __init__(self , year , raceNo):
         self.session = fastf1.get_session(year, raceNo, 'R')
@@ -19,10 +18,15 @@ class F1Telemetry:
         self.total_laps   = int(self.session.laps['LapNumber'].max())
         self.data= {}
          
-    def display(self):
-        print(self.session.laps.pick_drivers(10))
-    
+    # def display(self):
+    #     laps = self.session.laps.pick_drivers(6)
+    #     lap_data = laps.pick_laps(6)
+    #     telemetry = lap_data.get_telemetry()
+    #     print(telemetry[['X' , 'Y' , 'Z']])
+
     def lap_process(self, lap_num):
+
+        
         self.data[str(lap_num)] = []
         for _, row in self.gridPosition.iterrows():
             driver        = row['Abbreviation']
@@ -37,36 +41,39 @@ class F1Telemetry:
                 if lap_data.empty:                         
                     continue  
 
-
                 compound = lap_data['Compound'].iloc[0]
                 tyre_life = lap_data['TyreLife'].iloc[0]
                 fresh_tyre = lap_data['FreshTyre'].iloc[0]
                 pit_in_raw = lap_data['PitInTime'].iloc[0]
+                
 
+
+                next_lap = True
                 if (lap_num + 1) <= self.total_laps:
                     next_lap_data = laps.pick_laps(lap_num + 1)
-                    if next_lap_data.empty:
+                    if  next_lap_data.empty:
+                        next_lap = False
                         pit_out_raw = None
-            
-
                     else:
+                        next_lap = True
                         pit_out_raw = next_lap_data['PitOutTime'].iloc[0]
+                        
                 else:
+                    next_lap = False
                     pit_out_raw = None
 
                 lap_time = lap_data['LapTime'].iloc[0]
                 lap_start_time = lap_data['LapStartTime'].iloc[0]
 
-
-                lap_duration = 120.0 if pd.isna(lap_time) else lap_time.total_seconds()
+                lap_duration = None if pd.isna(lap_time) else lap_time.total_seconds()
                 lap_start_seconds = None if pd.isna(lap_start_time) else lap_start_time.total_seconds()
 
                 pit_in  = None if pd.isna(pit_in_raw)  else (pit_in_raw  - lap_start_time).total_seconds()
                 pit_out = None if pd.isna(pit_out_raw) else (pit_out_raw - lap_start_time).total_seconds()
 
-
                 telemetry = lap_data.get_telemetry()
-
+            
+                
                 if telemetry.empty:
                     continue
 
@@ -81,7 +88,6 @@ class F1Telemetry:
                 y_vals = telemetry['Y'].tolist()
                 speed = telemetry['Speed'].tolist()
 
-
                 self.data[str(lap_num)].append({
                     'driver': driver,
                     'color':  color,
@@ -91,6 +97,7 @@ class F1Telemetry:
                     'lapDuration':  lap_duration,
                     'pitInTime':    pit_in, 
                     'pitOutTime':   pit_out, 
+                    'nextLap' : next_lap,
                     'points': [{'X': x, 'Y': y, 'speed' : s} for x, y, s in zip(x_vals, y_vals , speed)], 
                     'tyre' : {
                         'compound' : compound,
@@ -117,15 +124,12 @@ class F1Telemetry:
         ].iloc[0]
         pitOut_telemetry = pitOut_lap.get_telemetry().dropna(subset = ['X' , 'Y'])
 
-
         driverName = pitIn_lap['DriverNumber']
 
         pitIn_Time = pitIn_lap['PitInTime']
         pitOut_Time = pitOut_lap['PitOutTime']
 
-
         combined = pd.concat([pitIn_telemetry , pitOut_telemetry])
-
 
         pitLane = combined [
         (combined['SessionTime'] >= pitIn_Time) & (combined['SessionTime'] <= pitOut_Time)
@@ -176,9 +180,7 @@ class F1Telemetry:
 
 
 
-
                 
-
 
                 
         
@@ -198,7 +200,6 @@ def get_lap_batch(start_lap: int, end_lap: int):
         json.dump(result, f, indent=2)
     
     return result
-
 
 @app.get("/circuit")
 def load_circut():
@@ -230,6 +231,6 @@ def get_info():
         "drivers": drivers
     }
 
-
 f1 = F1Telemetry(2026 ,  4)
-f1.get_radio()
+# f1.display()
+

@@ -1,0 +1,1346 @@
+{
+  "1": [
+    {
+      "Time": [
+        "2026-05-03T16:20:01",
+        "2026-05-03T16:30:01",
+        "2026-05-03T16:34:52",
+        "2026-05-03T16:34:57",
+        "2026-05-03T16:37:28",
+        "2026-05-03T16:37:50",
+        "2026-05-03T16:37:50",
+        "2026-05-03T16:37:53",
+        "2026-05-03T16:37:54",
+        "2026-05-03T16:39:29",
+        "2026-05-03T16:39:48",
+        "2026-05-03T16:43:12",
+        "2026-05-03T16:45:12",
+        "2026-05-03T16:57:05",
+        "2026-05-03T17:04:03",
+        "2026-05-03T17:05:27"
+      ],
+      "Category": [
+        "Flag",
+        "Other",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Other",
+        "Other",
+        "Flag",
+        "Other"
+      ],
+      "Message": [
+        "GREEN LIGHT - PIT EXIT OPEN",
+        "PIT EXIT CLOSED",
+        "YELLOW IN TRACK SECTOR 18",
+        "DOUBLE YELLOW IN TRACK SECTOR 18",
+        "CLEAR IN TRACK SECTOR 18",
+        "DOUBLE YELLOW IN TRACK SECTOR 18",
+        "YELLOW IN TRACK SECTOR 18",
+        "CLEAR IN TRACK SECTOR 18",
+        "DOUBLE YELLOW IN TRACK SECTOR 18",
+        "DOUBLE YELLOW IN TRACK SECTOR 17",
+        "CLEAR IN TRACK SECTOR 17",
+        "CLEAR IN TRACK SECTOR 18",
+        "RISK OF RAIN FOR THE F1 RACE IS 40%",
+        "OVERTAKE DISABLED",
+        "GREEN LIGHT - PIT EXIT OPEN",
+        "OVERTAKE ENABLED"
+      ],
+      "Sector": [
+        null,
+        null,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        17,
+        17,
+        18,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "2": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "3": [
+    {
+      "Time": [
+        "2026-05-03T17:07:40"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "TURN 11 INCIDENT INVOLVING CARS 43 (COL) AND 44 (HAM) NOTED - CAUSING A COLLISION"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "4": [
+    {
+      "Time": [
+        "2026-05-03T17:09:18"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: TURN 11 INCIDENT INVOLVING CARS 43 (COL) AND 44 (HAM) REVIEWED NO FURTHER INVESTIGATION - CAUSING A COLLISION"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "5": [
+    {
+      "Time": [
+        "2026-05-03T17:11:46"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "DOUBLE YELLOW IN TRACK SECTOR 15"
+      ],
+      "Sector": [
+        15
+      ]
+    }
+  ],
+  "6": [
+    {
+      "Time": [
+        "2026-05-03T17:12:02",
+        "2026-05-03T17:12:03",
+        "2026-05-03T17:12:04",
+        "2026-05-03T17:12:15",
+        "2026-05-03T17:12:15",
+        "2026-05-03T17:12:43",
+        "2026-05-03T17:13:34"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "SafetyCar",
+        "Other",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "DOUBLE YELLOW IN TRACK SECTOR 19",
+        "YELLOW IN TRACK SECTOR 14",
+        "YELLOW IN TRACK SECTOR 13",
+        "SAFETY CAR DEPLOYED",
+        "OVERTAKE DISABLED",
+        "CLEAR IN TRACK SECTOR 19",
+        "DOUBLE YELLOW IN TRACK SECTOR 18"
+      ],
+      "Sector": [
+        19,
+        14,
+        13,
+        null,
+        null,
+        19,
+        18
+      ]
+    }
+  ],
+  "7": [
+    {
+      "Time": [
+        "2026-05-03T17:15:00",
+        "2026-05-03T17:15:45",
+        "2026-05-03T17:16:06"
+      ],
+      "Category": [
+        "Other",
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "MARSHALS ON TRACK AT TURN 14",
+        "MARSHALS ON TRACK AT TURN 17",
+        "RECOVERY VEHICLE ON TRACK AT TURN 17"
+      ],
+      "Sector": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "8": [
+    {
+      "Time": [
+        "2026-05-03T17:16:39",
+        "2026-05-03T17:16:41",
+        "2026-05-03T17:16:41",
+        "2026-05-03T17:16:42",
+        "2026-05-03T17:16:49",
+        "2026-05-03T17:17:00",
+        "2026-05-03T17:17:08"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Other",
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "DOUBLE YELLOW IN TRACK SECTOR 16",
+        "CLEAR IN TRACK SECTOR 15",
+        "CLEAR IN TRACK SECTOR 16",
+        "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "RECOVERY VEHICLE ON TRACK AT TURN 14",
+        "TURN 17 INCIDENT INVOLVING CAR 10 (GAS) NOTED - CAUSING A COLLISION",
+        "FIA STEWARDS: TURN 17 INCIDENT INVOLVING CAR 10 (GAS) UNDER INVESTIGATION - CAUSING A COLLISION"
+      ],
+      "Sector": [
+        16,
+        15,
+        16,
+        15,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "9": [
+    {
+      "Time": [
+        "2026-05-03T17:19:18",
+        "2026-05-03T17:19:35",
+        "2026-05-03T17:19:45",
+        "2026-05-03T17:20:37",
+        "2026-05-03T17:20:38"
+      ],
+      "Category": [
+        "Other",
+        "Flag",
+        "Other",
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: UPDATE: TURN 17 INCIDENT INVOLVING CARS 30 (LAW) AND 10 (GAS) UNDER INVESTIGATION - CAUSING A COLLISION",
+        "DOUBLE YELLOW IN TRACK SECTOR 16",
+        "FIA STEWARDS: TURN 17 INCIDENT INVOLVING CARS 30 (LAW) AND 10 (GAS) WILL BE INVESTIGATED AFTER THE RACE - CAUSING A COLLISION",
+        "CAR 81 (PIA) TIME 2:11.907 DELETED - TRACK LIMITS AT TURN 15 LAP 6 13:13:19",
+        "CAR 30 (LAW) LAP DELETED - TRACK LIMITS AT TURN 15 LAP 6 13:14:05 (PIT)"
+      ],
+      "Sector": [
+        null,
+        16,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "10": [
+    {
+      "Time": [
+        "2026-05-03T17:21:40",
+        "2026-05-03T17:21:41",
+        "2026-05-03T17:22:20",
+        "2026-05-03T17:22:21",
+        "2026-05-03T17:22:23",
+        "2026-05-03T17:22:23",
+        "2026-05-03T17:22:44",
+        "2026-05-03T17:22:44",
+        "2026-05-03T17:22:44",
+        "2026-05-03T17:23:29"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "CLEAR IN TRACK SECTOR 18",
+        "CLEAR IN TRACK SECTOR 19",
+        "CLEAR IN TRACK SECTOR 13",
+        "YELLOW IN TRACK SECTOR 13",
+        "CLEAR IN TRACK SECTOR 14",
+        "CLEAR IN TRACK SECTOR 13",
+        "CLEAR IN TRACK SECTOR 15",
+        "CLEAR IN TRACK SECTOR 16",
+        "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "DOUBLE YELLOW IN TRACK SECTOR 16"
+      ],
+      "Sector": [
+        18,
+        19,
+        13,
+        13,
+        14,
+        13,
+        15,
+        16,
+        15,
+        16
+      ]
+    }
+  ],
+  "11": [
+    {
+      "Time": [
+        "2026-05-03T17:23:47",
+        "2026-05-03T17:23:47",
+        "2026-05-03T17:23:48",
+        "2026-05-03T17:24:00",
+        "2026-05-03T17:24:01",
+        "2026-05-03T17:24:04",
+        "2026-05-03T17:24:07",
+        "2026-05-03T17:25:33"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "SafetyCar",
+        "Flag"
+      ],
+      "Message": [
+        "CLEAR IN TRACK SECTOR 15",
+        "CLEAR IN TRACK SECTOR 16",
+        "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "CLEAR IN TRACK SECTOR 15",
+        "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "CLEAR IN TRACK SECTOR 15",
+        "SAFETY CAR IN THIS LAP",
+        "TRACK CLEAR"
+      ],
+      "Sector": [
+        15,
+        16,
+        15,
+        15,
+        15,
+        15,
+        null,
+        null
+      ]
+    }
+  ],
+  "12": [
+    {
+      "Time": [
+        "2026-05-03T17:26:21",
+        "2026-05-03T17:27:32"
+      ],
+      "Category": [
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "OVERTAKE ENABLED",
+        "TRACK SURFACE SLIPPERY IN TRACK SECTOR 14"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "13": [
+    {
+      "Time": [
+        "2026-05-03T17:28:47"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "CLEAR IN TRACK SECTOR 14"
+      ],
+      "Sector": [
+        14
+      ]
+    }
+  ],
+  "14": [
+    {
+      "Time": [
+        "2026-05-03T17:29:51",
+        "2026-05-03T17:29:59"
+      ],
+      "Category": [
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "TURN 11 INCIDENT INVOLVING CARS 41 (LIN) AND 11 (PER) NOTED - FORCING ANOTHER DRIVER OFF THE TRACK",
+        "CAR 11 (PER) TIME 1:36.951 DELETED - TRACK LIMITS AT TURN 11 LAP 12 13:27:01"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "15": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "16": [
+    {
+      "Time": [
+        "2026-05-03T17:32:23",
+        "2026-05-03T17:32:29",
+        "2026-05-03T17:32:33",
+        "2026-05-03T17:33:10"
+      ],
+      "Category": [
+        "Other",
+        "Flag",
+        "Flag",
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: TURN 11 INCIDENT INVOLVING CARS 41 (LIN) AND 11 (PER) REVIEWED NO FURTHER INVESTIGATION - FORCING ANOTHER DRIVER OFF THE TRACK",
+        "YELLOW IN TRACK SECTOR 19",
+        "CLEAR IN TRACK SECTOR 19",
+        "INCIDENT INVOLVING CAR 3 (VER) NOTED - FAILING TO FOLLOW RACE DIRECTORS INSTRUCTIONS \u2013 CROSSING THE LINE AT PIT EXIT"
+      ],
+      "Sector": [
+        null,
+        19,
+        19,
+        null
+      ]
+    }
+  ],
+  "17": [
+    {
+      "Time": [
+        "2026-05-03T17:34:04",
+        "2026-05-03T17:34:12",
+        "2026-05-03T17:34:23",
+        "2026-05-03T17:35:19"
+      ],
+      "Category": [
+        "Other",
+        "Other",
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "INCIDENT INVOLVING CAR 31 (OCO) NOTED - YELLOW FLAG INFRINGEMENT",
+        "INCIDENT INVOLVING CAR 23 (ALB) NOTED - YELLOW FLAG INFRINGEMENT",
+        "INCIDENT INVOLVING CAR 14 (ALO) NOTED - YELLOW FLAG INFRINGEMENT",
+        "CAR 18 (STR) TIME 1:40.953 DELETED - TRACK LIMITS AT TURN 17 LAP 15 13:32:27"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "18": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "19": [
+    {
+      "Time": [
+        "2026-05-03T17:37:01"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "CAR 18 (STR) TIME 1:36.371 DELETED - TRACK LIMITS AT TURN 5 LAP 17 13:34:39"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "20": [
+    {
+      "Time": [
+        "2026-05-03T17:38:32"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 3 (VER) WILL BE INVESTIGATED AFTER THE RACE - FAILING TO FOLLOW RACE DIRECTORS INSTRUCTIONS \u2013 CROSSING THE LINE AT PIT EXIT"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "21": [
+    {
+      "Time": [
+        "2026-05-03T17:40:21",
+        "2026-05-03T17:41:01"
+      ],
+      "Category": [
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "TURN 18 INCIDENT INVOLVING CARS 23 (ALB) AND 3 (VER) NOTED",
+        "CAR 12 (ANT) TIME 1:33.345 DELETED - TRACK LIMITS AT TURN 5 LAP 19 13:37:17"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "22": [
+    {
+      "Time": [
+        "2026-05-03T17:42:48"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: TURN 18 INCIDENT INVOLVING CARS 23 (ALB) AND 3 (VER) REVIEWED NO FURTHER INVESTIGATION"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "23": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "24": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "25": [
+    {
+      "Time": [
+        "2026-05-03T17:46:48"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "CAR 14 (ALO) TIME 1:36.386 DELETED - TRACK LIMITS AT TURN 5 LAP 23 13:44:15"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "26": [
+    {
+      "Time": [
+        "2026-05-03T17:48:37",
+        "2026-05-03T17:48:41",
+        "2026-05-03T17:49:08"
+      ],
+      "Category": [
+        "Other",
+        "Flag",
+        "Other"
+      ],
+      "Message": [
+        "TRACK SURFACE SLIPPERY IN TRACK SECTOR 15",
+        "CLEAR IN TRACK SECTOR 15",
+        "INCIDENT INVOLVING CAR 77 (BOT) NOTED - SPEEDING IN THE PIT LANE"
+      ],
+      "Sector": [
+        null,
+        15,
+        null
+      ]
+    }
+  ],
+  "27": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "28": [
+    {
+      "Time": [
+        "2026-05-03T17:51:07",
+        "2026-05-03T17:52:30",
+        "2026-05-03T17:52:38"
+      ],
+      "Category": [
+        "Other",
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 77 (BOT) UNDER INVESTIGATION - SPEEDING IN THE PIT LANE",
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 31 (OCO) WILL BE INVESTIGATED AFTER THE RACE - YELLOW FLAG INFRINGEMENT",
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 23 (ALB) WILL BE INVESTIGATED AFTER THE RACE - YELLOW FLAG INFRINGEMENT"
+      ],
+      "Sector": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "29": [
+    {
+      "Time": [
+        "2026-05-03T17:52:53"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 14 (ALO) WILL BE INVESTIGATED AFTER THE RACE - YELLOW FLAG INFRINGEMENT"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "30": [
+    {
+      "Time": [
+        "2026-05-03T17:55:11"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "FIA STEWARDS: DRIVE THROUGH PENALTY FOR CAR 77 (BOT) - SPEEDING IN THE PIT LANE"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "31": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "32": [
+    {
+      "Time": [
+        "2026-05-03T17:57:34"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 13:57:34"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "33": [
+    {
+      "Time": [
+        "2026-05-03T17:59:29",
+        "2026-05-03T17:59:39",
+        "2026-05-03T17:59:51",
+        "2026-05-03T18:00:10"
+      ],
+      "Category": [
+        "Other",
+        "Other",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "CAR 14 (ALO) TIME 1:36.080 DELETED - TRACK LIMITS AT TURN 5 LAP 29 13:53:53",
+        "FIA STEWARDS: PENALTY SERVED - DRIVE THROUGH PENALTY FOR CAR 77 (BOT) - SPEEDING IN THE PIT LANE",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 13:59:50",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:00:09"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "34": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "35": [
+    {
+      "Time": [
+        "2026-05-03T18:02:09"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:02:09"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "36": [
+    {
+      "Time": [
+        "2026-05-03T18:03:58",
+        "2026-05-03T18:04:03",
+        "2026-05-03T18:04:10",
+        "2026-05-03T18:04:13"
+      ],
+      "Category": [
+        "Other",
+        "Other",
+        "Other",
+        "Flag"
+      ],
+      "Message": [
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 31 (OCO) NO FURTHER ACTION - YELLOW FLAG INFRINGEMENT",
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 23 (ALB) NO FURTHER ACTION - YELLOW FLAG INFRINGEMENT",
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 14 (ALO) NO FURTHER ACTION - YELLOW FLAG INFRINGEMENT",
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:04:12"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "37": [
+    {
+      "Time": [
+        "2026-05-03T18:05:58",
+        "2026-05-03T18:06:14",
+        "2026-05-03T18:06:17"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:05:58",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:06:13",
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:06:16"
+      ],
+      "Sector": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "38": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "39": [
+    {
+      "Time": [
+        "2026-05-03T18:08:45"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:08:45"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "40": [
+    {
+      "Time": [
+        "2026-05-03T18:09:59",
+        "2026-05-03T18:10:53"
+      ],
+      "Category": [
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:09:58",
+        "WAVED BLUE FLAG FOR CAR 14 (ALO) TIMED AT 14:10:53"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "41": [
+    {
+      "Time": [
+        "2026-05-03T18:12:03",
+        "2026-05-03T18:12:10",
+        "2026-05-03T18:12:10",
+        "2026-05-03T18:12:29"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:12:02",
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:12:09",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:12:09",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:12:29"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "42": [
+    {
+      "Time": [
+        "2026-05-03T18:13:56"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:13:55"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "43": [
+    {
+      "Time": [
+        "2026-05-03T18:14:45",
+        "2026-05-03T18:15:00",
+        "2026-05-03T18:15:29"
+      ],
+      "Category": [
+        "Other",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "CAR 1 (NOR) TIME 1:32.662 DELETED - TRACK LIMITS AT TURN 5 LAP 42 14:13:06",
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:14:59",
+        "BLACK AND WHITE FLAG FOR CAR 77 (BOT) - IGNORING BLUE FLAGS"
+      ],
+      "Sector": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "44": [
+    {
+      "Time": [
+        "2026-05-03T18:16:09",
+        "2026-05-03T18:16:57",
+        "2026-05-03T18:17:09",
+        "2026-05-03T18:17:10"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:16:09",
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:16:57",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:17:08",
+        "WAVED BLUE FLAG FOR CAR 14 (ALO) TIMED AT 14:17:10"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "45": [
+    {
+      "Time": [
+        "2026-05-03T18:17:32",
+        "2026-05-03T18:17:54",
+        "2026-05-03T18:18:11"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:17:31",
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:17:54",
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:18:10"
+      ],
+      "Sector": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "46": [
+    {
+      "Time": [
+        "2026-05-03T18:19:27",
+        "2026-05-03T18:19:41"
+      ],
+      "Category": [
+        "Other",
+        "Flag"
+      ],
+      "Message": [
+        "CAR 12 (ANT) TIME 1:32.399 DELETED - TRACK LIMITS AT TURN 11 LAP 45 14:18:11",
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:19:41"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "47": [
+    {
+      "Time": [
+        "2026-05-03T18:20:49",
+        "2026-05-03T18:21:51"
+      ],
+      "Category": [
+        "Flag",
+        "Other"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:20:48",
+        "CAR 14 (ALO) TIME 1:33.512 DELETED - TRACK LIMITS AT TURN 5 LAP 44 14:18:17"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "48": [
+    {
+      "Time": [
+        "2026-05-03T18:22:10",
+        "2026-05-03T18:22:29",
+        "2026-05-03T18:22:32",
+        "2026-05-03T18:23:10",
+        "2026-05-03T18:23:29"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Other"
+      ],
+      "Message": [
+        "BLACK AND WHITE FLAG FOR CAR 14 (ALO) - TRACK LIMITS",
+        "YELLOW IN TRACK SECTOR 19",
+        "CLEAR IN TRACK SECTOR 19",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:23:10",
+        "CAR 87 (BEA) TIME 1:37.535 DELETED - TRACK LIMITS AT TURN 7 LAP 47 14:22:07"
+      ],
+      "Sector": [
+        null,
+        19,
+        19,
+        null,
+        null
+      ]
+    }
+  ],
+  "49": [
+    {
+      "Time": [
+        "2026-05-03T18:24:32"
+      ],
+      "Category": [
+        "Other"
+      ],
+      "Message": [
+        "CAR 14 (ALO) TIME 1:36.389 DELETED - TRACK LIMITS AT TURN 17 LAP 46 14:22:30"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "50": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "51": [
+    {
+      "Time": [
+        "2026-05-03T18:26:44",
+        "2026-05-03T18:26:52",
+        "2026-05-03T18:27:13",
+        "2026-05-03T18:27:14",
+        "2026-05-03T18:27:16",
+        "2026-05-03T18:27:43",
+        "2026-05-03T18:27:49"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 14 (ALO) TIMED AT 14:26:44",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:26:51",
+        "WAVED BLUE FLAG FOR CAR 31 (OCO) TIMED AT 14:27:12",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:27:14",
+        "WAVED BLUE FLAG FOR CAR 11 (PER) TIMED AT 14:27:15",
+        "WAVED BLUE FLAG FOR CAR 31 (OCO) TIMED AT 14:27:43",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:27:48"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "52": [
+    {
+      "Time": [
+        "2026-05-03T18:28:12",
+        "2026-05-03T18:28:27",
+        "2026-05-03T18:28:34",
+        "2026-05-03T18:29:20"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 5 (BOR) TIMED AT 14:28:12",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:28:27",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:28:34",
+        "WAVED BLUE FLAG FOR CAR 5 (BOR) TIMED AT 14:29:20"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "53": [
+    {
+      "Time": [],
+      "Category": [],
+      "Message": [],
+      "Sector": []
+    }
+  ],
+  "54": [
+    {
+      "Time": [
+        "2026-05-03T18:31:25",
+        "2026-05-03T18:31:41",
+        "2026-05-03T18:31:57",
+        "2026-05-03T18:32:02",
+        "2026-05-03T18:32:11",
+        "2026-05-03T18:32:13"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:31:24",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:31:41",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:31:57",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:32:02",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:32:11",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:32:12"
+      ],
+      "Sector": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "55": [
+    {
+      "Time": [
+        "2026-05-03T18:33:01",
+        "2026-05-03T18:34:12"
+      ],
+      "Category": [
+        "Flag",
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 87 (BEA) TIMED AT 14:33:01",
+        "WAVED BLUE FLAG FOR CAR 87 (BEA) TIMED AT 14:34:11"
+      ],
+      "Sector": [
+        null,
+        null
+      ]
+    }
+  ],
+  "56": [
+    {
+      "Time": [
+        "2026-05-03T18:35:24"
+      ],
+      "Category": [
+        "Flag"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:35:23"
+      ],
+      "Sector": [
+        null
+      ]
+    }
+  ],
+  "57": [
+    {
+      "Time": [
+        "2026-05-03T18:36:20",
+        "2026-05-03T18:36:32",
+        "2026-05-03T18:36:33",
+        "2026-05-03T18:36:37",
+        "2026-05-03T18:36:39",
+        "2026-05-03T18:36:47",
+        "2026-05-03T18:36:51",
+        "2026-05-03T18:37:21",
+        "2026-05-03T18:37:28",
+        "2026-05-03T18:37:51",
+        "2026-05-03T18:38:18",
+        "2026-05-03T18:38:55",
+        "2026-05-03T18:38:58",
+        "2026-05-03T18:41:25",
+        "2026-05-03T18:41:25",
+        "2026-05-03T18:44:04",
+        "2026-05-03T18:44:04",
+        "2026-05-03T18:44:15",
+        "2026-05-03T18:47:41",
+        "2026-05-03T18:49:32",
+        "2026-05-03T18:49:37",
+        "2026-05-03T18:49:38",
+        "2026-05-03T18:51:10",
+        "2026-05-03T18:51:34",
+        "2026-05-03T18:53:21",
+        "2026-05-03T18:53:31",
+        "2026-05-03T18:53:36",
+        "2026-05-03T18:55:19",
+        "2026-05-03T18:55:35"
+      ],
+      "Category": [
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Other",
+        "Other",
+        "Other",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Flag",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other",
+        "Other"
+      ],
+      "Message": [
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:36:20",
+        "DOUBLE YELLOW IN TRACK SECTOR 4",
+        "YELLOW IN TRACK SECTOR 4",
+        "CLEAR IN TRACK SECTOR 4",
+        "WAVED BLUE FLAG FOR CAR 77 (BOT) TIMED AT 14:36:38",
+        "WAVED BLUE FLAG FOR CAR 18 (STR) TIMED AT 14:36:47",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:36:51",
+        "CHEQUERED FLAG",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:37:27",
+        "WAVED BLUE FLAG FOR CAR 41 (LIN) TIMED AT 14:37:51",
+        "CAR 16 (LEC) TIME 1:49.834 DELETED - TRACK LIMITS AT TURN 8 LAP 57 14:36:53",
+        "ALL PASS HOLDERS MAY ACCESS THE PIT LANE",
+        "CAR 16 (LEC) TIME 1:49.834 DELETED - TRACK LIMITS AT TURN 6 LAP 57 14:36:46",
+        "YELLOW IN TRACK SECTOR 15",
+        "YELLOW IN TRACK SECTOR 16",
+        "DOUBLE YELLOW IN TRACK SECTOR 15",
+        "DOUBLE YELLOW IN TRACK SECTOR 16",
+        "TURN 17 INCIDENT INVOLVING CAR 63 (RUS) NOTED - MOVING UNDER BRAKING",
+        "TURN 1 INCIDENT INVOLVING CARS 3 (VER) AND 63 (RUS) NOTED - CAUSING A COLLISION",
+        "TURN 17 INCIDENT INVOLVING CARS 16 (LEC) AND 63 (RUS) NOTED - CAUSING A COLLISION",
+        "CAR 16 (LEC) TIME 1:49.834 DELETED - TRACK LIMITS AT TURN 15 LAP 57 14:37:31",
+        "CAR 16 (LEC) TIME 1:49.834 DELETED - TRACK LIMITS AT TURN 7 LAP 57 14:36:54",
+        "INCIDENT INVOLVING CAR 16 (LEC) NOTED - LEAVING THE TRACK MULTIPLE TIMES AND GAINING AN ADVANTAGE",
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 16 (LEC) WILL BE INVESTIGATED AFTER THE RACE - LEAVING THE TRACK MULTIPLE TIMES AND GAINING AN ADVANTAGE",
+        "FIA STEWARDS: TURN 17 INCIDENT INVOLVING CAR 63 (RUS) REVIEWED NO FURTHER INVESTIGATION - MOVING UNDER BRAKING",
+        "FIA STEWARDS: TURN 1 INCIDENT INVOLVING CARS 3 (VER) AND 63 (RUS) WILL BE INVESTIGATED AFTER THE RACE - CAUSING A COLLISION",
+        "FIA STEWARDS: TURN 17 INCIDENT INVOLVING CARS 16 (LEC) AND 63 (RUS) WILL BE INVESTIGATED AFTER THE RACE - CAUSING A COLLISION",
+        "INCIDENT INVOLVING CAR 16 (LEC) NOTED - UNSAFE CONDITION",
+        "FIA STEWARDS: INCIDENT INVOLVING CAR 16 (LEC) WILL BE INVESTIGATED AFTER THE RACE - UNSAFE CONDITION"
+      ],
+      "Sector": [
+        null,
+        4,
+        4,
+        4,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        15,
+        16,
+        15,
+        16,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ]
+}
