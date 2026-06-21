@@ -269,9 +269,12 @@ class DriverState {
   DriverTelemetry currentTelemetry;
   int currentLap;
   final Map<String, List<DriverTelemetry>> allData;
+
   final Future<void> Function() loadBatch;
+
   late AnimationController animationController;
   late AnimationController pitAnimationController;
+
   int currentIndex = 0;
 
   double? activePitIn;
@@ -287,6 +290,8 @@ class DriverState {
   }) {
     animationController = AnimationController(
       vsync: vsync,
+      // here we will do duration : lap.duration == null ? Duration ( milliseconds  : currentTelemetry.points.len() * 16 )
+      // something like that based on the actual tick rate of animation controller
       duration: Duration(
         milliseconds: (currentTelemetry.lapDuration * 1000).toInt(),
       ),
@@ -305,6 +310,8 @@ class DriverState {
 
     pitAnimationController = AnimationController(
       vsync: vsync,
+
+      // what if duration: Duration ( milliseconds : ( (pitInTime - pitOutTime) * 1000 ) .toInt()
       duration: Duration(
         milliseconds: ((activePitOut ?? currentTelemetry.lapDuration) * 1000).toInt(),
       ),
