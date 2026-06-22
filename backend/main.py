@@ -19,10 +19,15 @@ class F1Telemetry:
         self.data= {}
          
     # def display(self):
-    #     laps = self.session.laps.pick_drivers(6)
-    #     lap_data = laps.pick_laps(6)
-    #     telemetry = lap_data.get_telemetry()
-    #     print(telemetry[['X' , 'Y' , 'Z']])
+    #     laps = self.session.laps.pick_drivers(44)
+    #     telemetry = laps.get_telemetry()
+    #     sessionTime = telemetry['SessionTime'].iloc[-1]
+    #     lap_data = laps.pick_laps(57)
+    #     lap_time = lap_data['LapTime']
+    #     start_time = lap_data['LapStartTime'].iloc[0]
+
+    #     duration = (sessionTime - start_time).total_seconds()
+    #     print(lap_time)
 
     def lap_process(self, lap_num):
 
@@ -65,7 +70,6 @@ class F1Telemetry:
                 lap_time = lap_data['LapTime'].iloc[0]
                 lap_start_time = lap_data['LapStartTime'].iloc[0]
 
-                lap_duration = None if pd.isna(lap_time) else lap_time.total_seconds()
                 lap_start_seconds = None if pd.isna(lap_start_time) else lap_start_time.total_seconds()
 
                 pit_in  = None if pd.isna(pit_in_raw)  else (pit_in_raw  - lap_start_time).total_seconds()
@@ -77,12 +81,17 @@ class F1Telemetry:
                 if telemetry.empty:
                     continue
 
-                telemetry = telemetry.iloc[::5]
-                telemetry = telemetry.dropna(subset=['X', 'Y', 'Speed'])
-                
 
-                if telemetry.empty:
-                    continue
+                if (pd.isna(lap_time)):
+                    session_time = telemetry['SessionTime'].iloc[-1]
+                    lap_duration = (session_time - lap_start_time).total_seconds()
+                else:
+                    lap_duration = lap_time.total_seconds()
+           
+
+
+                telemetry = telemetry.iloc[::2]
+                telemetry = telemetry.dropna(subset=['X', 'Y', 'Speed'])
                     
                 x_vals = telemetry['X'].tolist()
                 y_vals = telemetry['Y'].tolist()
@@ -129,10 +138,14 @@ class F1Telemetry:
         pitIn_Time = pitIn_lap['PitInTime']
         pitOut_Time = pitOut_lap['PitOutTime']
 
+        # Extend window so pit lane visually connects to the racing line
+        entry_buffer = pd.Timedelta(seconds=5)
+        exit_buffer = pd.Timedelta(seconds=10)
+
         combined = pd.concat([pitIn_telemetry , pitOut_telemetry])
 
         pitLane = combined [
-        (combined['SessionTime'] >= pitIn_Time) & (combined['SessionTime'] <= pitOut_Time)
+        (combined['SessionTime'] >= pitIn_Time - entry_buffer) & (combined['SessionTime'] <= pitOut_Time + exit_buffer)
         ].iloc[::2]
 
         pitLanePoints = [
