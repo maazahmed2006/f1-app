@@ -10,9 +10,9 @@ import '../repositories/CircutRepository.dart';
 class CircuitPainter extends CustomPainter {
   final List<Offset> coordinates;
   final List<Offset> pitLaneCoordinates;
+  final List<Map<String , dynamic>> cornerData;
 
-  CircuitPainter({required this.coordinates, required this.pitLaneCoordinates});
-
+  CircuitPainter({required this.coordinates, required this.pitLaneCoordinates , required this.cornerData});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,7 +42,6 @@ class CircuitPainter extends CustomPainter {
           (p.dx - minX) * scale + offsetX,
           (p.dy - minY) * scale + offsetY,
         );
-
 
     final path = Path();
     path.moveTo(
@@ -109,10 +108,6 @@ class CircuitPainter extends CustomPainter {
         pitPath.lineTo(n.dx, n.dy);
       }
 
-      // Offset last = coordinates.last ;
-      // final lastNormalized = normalize(last) ;
-      // path.lineTo(lastNormalized.dx, lastNormalized.dy) ;
-      // Outer glow
       canvas.drawPath(
         pitPath,
         Paint()
@@ -143,17 +138,76 @@ class CircuitPainter extends CustomPainter {
           ..strokeCap = StrokeCap.round,
       );
     }
-  }
+    //
+      // corners
+      for (final corner in cornerData) {
+        final pos = normalize(Offset(
+          (corner['X'] as double),
+          (corner['Y'] as double),
+        ));
 
+        // dot
+        canvas.drawCircle(pos, 3, Paint()
+          ..color = Colors.green.withValues(alpha: 0.6));
+
+        // label
+        final textPainter = TextPainter(
+          text: TextSpan(
+            text: corner['cornerNumber'].toString(),
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )
+          ..layout();
+
+        textPainter.paint(
+          canvas,
+          Offset(pos.dx + 5, pos.dy - textPainter.height / 2),
+        );
+      }
+
+    if (coordinates.length >= 2) {
+      final p1 = normalize(coordinates[0]);
+      final p2 = normalize(coordinates[1]);
+
+      // perpendicular direction to the track
+      final dx = p2.dx - p1.dx;
+      final dy = p2.dy - p1.dy;
+      final len = sqrt(dx * dx + dy * dy);
+      final perpX = -dy / len;
+      final perpY =  dx / len;
+
+      final lineLength = 8.0;
+      final start = Offset(p1.dx + perpX * lineLength, p1.dy + perpY * lineLength);
+      final end   = Offset(p1.dx - perpX * lineLength, p1.dy - perpY * lineLength);
+
+      // // glow
+      // canvas.drawLine(start, end, Paint()
+      //   ..color       = Colors.white.withValues(alpha: 0.3)
+      //   ..strokeWidth = 6
+      //   ..maskFilter  = const MaskFilter.blur(BlurStyle.normal, 4));
+
+      // checkered white/red line
+
+      canvas.drawLine(start, end, Paint()
+        ..color       = Colors.white.withValues(alpha: 0.9)
+        ..strokeWidth = 1.5
+        ..strokeCap   = StrokeCap.round);
+
+
+    }
+  }
 
   @override
   bool shouldRepaint(CircuitPainter oldDelegate) =>
       oldDelegate.coordinates != coordinates ||
-          oldDelegate.pitLaneCoordinates != pitLaneCoordinates;
+          oldDelegate.pitLaneCoordinates != pitLaneCoordinates ||
+          oldDelegate.cornerData != cornerData;
 }
-
-
-
 
 class DriverPainter extends CustomPainter {
   final List<Offset> circuitPoints;
@@ -191,75 +245,74 @@ class DriverPainter extends CustomPainter {
 
     for (final driverState in drivers) {
       final driver = driverState.currentTelemetry;
+      if (driverState.isRetired) continue;
       if (driver.points.isEmpty) continue;
-      if(driver.lapStartTime + driver.lapDuration == 0) continue ;
+      if (driver.lapStartTime + driver.lapDuration == 0) continue;
 
       final double exactIndex =
           driverState.animationController.value * (driver.points.length - 1);
       final int i = exactIndex.toInt().clamp(0, driver.points.length - 2);
       final double t = exactIndex - i;
 
+      if (driver.points[i] == null && driver.points[i + 1] == null) {
+        driverState.animationController.stop();
+        continue;
+      } else {
+        final Offset p1 = driver.points[i]!;
+        final Offset p2 = driver.points[i + 1]!;
+        final Offset interpolated = Offset(
+          p1.dx + (p2.dx - p1.dx) * t,
+          p1.dy + (p2.dy - p1.dy) * t,
+        );
 
-      if(driver.points[i] ==  null && driver.points[i+1] == null){
-          driverState.animationController.stop();
-          continue ;
+        final pos = normalize(interpolated);
+        final color = Color(int.parse(driver.color.replaceAll('#', '0xFF')));
+
+        final bool inPits =
+            driverState.activePitIn != null && driverState.activePitOut != null
+            ? driverState.pitAnimationController.value >=
+                      (driverState.activePitIn! /
+                          (driverState.activePitOut ?? driver.lapDuration)) &&
+                  driverState.pitAnimationController.value <=
+                      (driverState.activePitOut! /
+                          (driverState.activePitOut ?? driver.lapDuration))
+            : false;
+
+        canvas.drawCircle(
+          pos,
+          inPits ? 7 : 9,
+          Paint()
+            ..color = color.withValues(alpha: 0.3)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+        );
+        canvas.drawCircle(pos, inPits ? 7 : 9, Paint()..color = color);
+
+        final textSpan = TextSpan(
+          text: inPits ? '${driver.driverName}\nIN PIT' : driver.driverName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 7,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+
+        final textPainter = TextPainter(
+          text: textSpan,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.rtl,
+        );
+
+        textPainter.layout();
+
+        final offset = Offset(
+          pos.dx - textPainter.width / 2,
+          pos.dy - textPainter.height / 2,
+        );
+
+        textPainter.paint(canvas, offset);
       }
-      else
-        {
-          final Offset p1 = driver.points[i]!;
-          final Offset p2 = driver.points[i + 1]!;
-          final Offset interpolated = Offset(
-            p1.dx + (p2.dx - p1.dx) * t,
-            p1.dy + (p2.dy - p1.dy) * t,
-          );
-
-          final pos = normalize(interpolated);
-          final color = Color(int.parse(driver.color.replaceAll('#', '0xFF')));
-
-          final bool inPits = driverState.activePitIn != null && driverState.activePitOut != null
-              ? driverState.pitAnimationController.value >=
-              (driverState.activePitIn! / (driverState.activePitOut ?? driver.lapDuration)) &&
-              driverState.pitAnimationController.value <=
-                  (driverState.activePitOut! / (driverState.activePitOut ?? driver.lapDuration))
-              : false;
-
-          canvas.drawCircle(
-            pos,
-            inPits ? 7 : 9,
-            Paint()
-              ..color = color.withValues(alpha: 0.3)
-              ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-          );
-          canvas.drawCircle(pos, inPits ? 7 : 9, Paint()..color = color);
-
-          final textSpan = TextSpan(
-            text: inPits ? '${driver.driverName}\nIN PIT' : driver.driverName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 7,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-
-          final textPainter = TextPainter(
-            text: textSpan,
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.rtl,
-          );
-
-          textPainter.layout();
-
-          final offset = Offset(
-            pos.dx - textPainter.width / 2,
-            pos.dy - textPainter.height / 2,
-          );
-
-          textPainter.paint(canvas, offset);
-        }
     }
-
   }
-
 
   @override
   bool shouldRepaint(DriverPainter oldDelegate) => true;
@@ -269,13 +322,15 @@ class DriverState {
   DriverTelemetry currentTelemetry;
   int currentLap;
   final Map<String, List<DriverTelemetry>> allData;
-
   final Future<void> Function() loadBatch;
+  final VoidCallback onTick;
 
   late AnimationController animationController;
   late AnimationController pitAnimationController;
 
   int currentIndex = 0;
+  bool isRetired = false;
+  int? retiredAtLap;
 
   double? activePitIn;
   double? activePitOut;
@@ -285,13 +340,11 @@ class DriverState {
     required this.currentLap,
     required this.allData,
     required this.loadBatch,
+    required this.onTick,
     required TickerProvider vsync,
-    required VoidCallback onTick,
   }) {
     animationController = AnimationController(
       vsync: vsync,
-      // here we will do duration : lap.duration == null ? Duration ( milliseconds  : currentTelemetry.points.len() * 16 )
-      // something like that based on the actual tick rate of animation controller
       duration: Duration(
         milliseconds: (currentTelemetry.lapDuration * 1000).toInt(),
       ),
@@ -303,20 +356,19 @@ class DriverState {
     animationController.addStatusListener(_onLapFinish);
     animationController.forward();
 
-    if (currentTelemetry.pitInTime != null && currentTelemetry.pitOutTime != null) {
+    if (currentTelemetry.pitInTime != null &&
+        currentTelemetry.pitOutTime != null) {
       activePitIn = currentTelemetry.pitInTime;
       activePitOut = currentTelemetry.pitOutTime;
     }
 
     pitAnimationController = AnimationController(
       vsync: vsync,
-
-      // what if duration: Duration ( milliseconds : ( (pitInTime - pitOutTime) * 1000 ) .toInt()
       duration: Duration(
-        milliseconds: ((activePitOut ?? currentTelemetry.lapDuration) * 1000).toInt(),
+        milliseconds: ((activePitOut ?? currentTelemetry.lapDuration) * 1000)
+            .toInt(),
       ),
     );
-
     pitAnimationController.addListener(onTick);
     pitAnimationController.forward();
     pitAnimationController.addStatusListener((status) {
@@ -334,7 +386,8 @@ class DriverState {
 
     pitAnimationController.reset();
     pitAnimationController.duration = Duration(
-      milliseconds: ((activePitOut ?? currentTelemetry.lapDuration) * 1000).toInt(),
+      milliseconds: ((activePitOut ?? currentTelemetry.lapDuration) * 1000)
+          .toInt(),
     );
     pitAnimationController.forward();
   }
@@ -342,7 +395,6 @@ class DriverState {
   void updateIndex() {
     final points = currentTelemetry.points;
     if (points.isEmpty) return;
-
     currentIndex = (animationController.value * (points.length - 1)).toInt();
   }
 
@@ -354,16 +406,15 @@ class DriverState {
   bool advanceLap() {
     currentLap++;
     final lapData = allData[currentLap.toString()];
-    if (lapData == null)
-      return false;
-    else {
-      for (int i = 0; i < lapData.length; i++) {
-        if (currentTelemetry.driverNumber == lapData[i].driverNumber) {
-          currentTelemetry = lapData[i];
-        }
+    if (lapData == null) return false;
+
+    for (int i = 0; i < lapData.length; i++) {
+      if (currentTelemetry.driverNumber == lapData[i].driverNumber) {
+        currentTelemetry = lapData[i];
+        return true;
       }
-      return true ;
     }
+    return false;
   }
 
   void startIndividualLap() {
@@ -372,12 +423,14 @@ class DriverState {
         milliseconds: (currentTelemetry.lapDuration * 1000).toInt(),
       );
       animationController.forward(from: 0.0);
-    }
-
-    else {
+      loadBatch();
+    } else {
+      isRetired = true;
+      retiredAtLap = currentLap;
       animationController.stop();
+      pitAnimationController.stop();
+      onTick();
     }
-    loadBatch();
   }
 
   double raceProgress() {
@@ -400,7 +453,7 @@ class RacePage extends StatefulWidget {
 class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
   List<Offset> coordinates = [];
   List<Offset> pitLaneCoordinates = [];
-
+  List<Map<String , dynamic>> cornerData = [];
 
   bool loading = true;
   Map<String, List<DriverTelemetry>> allData = {};
@@ -431,14 +484,14 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
     drivers = firstLap
         .map(
           (telemetry) => DriverState(
-        currentTelemetry: telemetry,
-        currentLap: 1,
-        vsync: this,
-        allData: allData,
-        loadBatch: _loadBatch,
-        onTick: () => setState(() {}),
-      ),
-    )
+            currentTelemetry: telemetry,
+            currentLap: 1,
+            vsync: this,
+            allData: allData,
+            loadBatch: _loadBatch,
+            onTick: () => setState(() {}),
+          ),
+        )
         .toList();
   }
 
@@ -458,7 +511,8 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
   Future<void> _loadCircuit() async {
     final model = await CircuitModelRepository().getCircutModel();
     coordinates = model.circuit;
-    pitLaneCoordinates = model.pitLane;
+    pitLaneCoordinates = model.pitLane ?? [];
+    cornerData = model.cornerData ;
   }
 
   @override
@@ -469,107 +523,121 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
       endDrawer: _buildLeaderboardDrawer(),
       body: loading
           ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Preparing Race Telemetry..",
-              style: GoogleFonts.orbitron(
-                fontSize: 15,
-                fontWeight: FontWeight.w300,
-                color: Colors.white70,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: LinearProgressIndicator(color: Colors.red),
-            ),
-          ],
-        ),
-      )
-          : SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 10),
-                  child: Text(
-                    'LAP $currentLap',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Preparing Race Telemetry..",
+                    style: GoogleFonts.orbitron(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white70,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 16, top: 10),
-                  child: Builder(
-                    builder: (context) {
-                      return GestureDetector(
-                        onTap: () {
-                          Scaffold.of(context).openEndDrawer();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.leaderboard,
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30),
+                    child: LinearProgressIndicator(color: Colors.red),
+                  ),
+                ],
+              ),
+            )
+          : SafeArea(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 10),
+                        child: Text(
+                          'LAP $currentLap',
+                          style: const TextStyle(
                             color: Colors.white,
-                            size: 20,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
                           ),
                         ),
-                      );
-                    },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16, top: 10),
+                        child: Builder(
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () {
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.leaderboard,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            Stack(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: CustomPaint(
-                    painter: CircuitPainter(
-                      coordinates: coordinates,
-                      pitLaneCoordinates: pitLaneCoordinates,  // add this
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                      child: RotatedBox(
+                        quarterTurns: 1,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Stack(
+                              children: [
+                                SizedBox(
+                                  width: constraints.maxWidth,
+                                  height: constraints.maxHeight,
+                                  child: CustomPaint(
+                                    painter: CircuitPainter(
+                                      coordinates: coordinates,
+                                      pitLaneCoordinates: pitLaneCoordinates,
+                                      cornerData: cornerData,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: constraints.maxWidth,
+                                  height: constraints.maxHeight,
+                                  child: CustomPaint(
+                                    painter: DriverPainter(
+                                      circuitPoints: coordinates,
+                                      drivers: drivers,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                    child: const SizedBox.expand(),
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: CustomPaint(
-                    painter: DriverPainter(
-                      circuitPoints: coordinates,
-                      drivers: drivers,
-                    ),
-                    child: const SizedBox.expand(),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
   Widget _buildLeaderboardDrawer() {
-    final sorted = [...drivers];
-    sorted.sort((a, b) => b.raceProgress().compareTo(a.raceProgress()));
+    final active = drivers.where((d) => !d.isRetired).toList()
+      ..sort((a, b) => b.raceProgress().compareTo(a.raceProgress()));
+    final retired = drivers.where((d) => d.isRetired).toList()
+      ..sort((a, b) => (b.retiredAtLap ?? 0).compareTo(a.retiredAtLap ?? 0));
+    final sorted = [...active, ...retired];
 
     return Drawer(
       backgroundColor: Colors.transparent,
@@ -616,39 +684,53 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
 
                       final int safeIndex = d.currentIndex.clamp(
                         0,
-                        telemetry.speeds.isEmpty ? 0 : telemetry.speeds.length - 1,
+                        telemetry.speeds.isEmpty
+                            ? 0
+                            : telemetry.speeds.length - 1,
                       );
-                      final double? currentSpeed =
-                      telemetry.speeds.isEmpty ? null : telemetry.speeds[safeIndex];
+                      final double? currentSpeed = telemetry.speeds.isEmpty
+                          ? null
+                          : telemetry.speeds[safeIndex];
 
                       final compound = telemetry.compound ?? '?';
                       final tyreLife = telemetry.tyreLife;
 
-                      final Color compoundColor = switch (compound.toUpperCase()) {
-                        'SOFT'   => const Color(0xFFE8002D),
+                      final Color compoundColor = switch (compound
+                          .toUpperCase()) {
+                        'SOFT' => const Color(0xFFE8002D),
                         'MEDIUM' => const Color(0xFFFFD514),
-                        'HARD'   => Colors.white,
-                        'INTER'  => const Color(0xFF39B54A),
-                        'WET'    => const Color(0xFF0067FF),
-                        _        => Colors.grey,
+                        'HARD' => Colors.white,
+                        'INTER' => const Color(0xFF39B54A),
+                        'WET' => const Color(0xFF0067FF),
+                        _ => Colors.grey,
                       };
 
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
                         ),
                         child: Row(
                           children: [
                             SizedBox(
                               width: 20,
                               child: Text(
-                                '${index + 1}',
+                                d.isRetired ? '—' : '${index + 1}',
                                 style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.6),
+                                  color: d.isRetired
+                                      ? Colors.red.withValues(alpha: 0.6)
+                                      : Colors.white.withValues(alpha: 0.6),
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -670,18 +752,31 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                                 children: [
                                   Text(
                                     telemetry.driverName,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: d.isRetired
+                                          ? Colors.white.withValues(alpha: 0.5)
+                                          : Colors.white,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  if (currentSpeed != null)
+                                  if (d.isRetired)
+                                    Text(
+                                      'RETIRED — Lap ${d.retiredAtLap ?? d.currentLap}',
+                                      style: TextStyle(
+                                        color: Colors.red.withValues(alpha: 0.7),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  else if (currentSpeed != null)
                                     Text(
                                       '${currentSpeed.toInt()} km/h',
                                       style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.5),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.5,
+                                        ),
                                         fontSize: 10,
                                       ),
                                     ),
@@ -694,11 +789,16 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: compoundColor.withValues(alpha: 0.15),
-                                border: Border.all(color: compoundColor, width: 1.5),
+                                border: Border.all(
+                                  color: compoundColor,
+                                  width: 1.5,
+                                ),
                               ),
                               child: Center(
                                 child: Text(
-                                  compound.isEmpty ? '?' : compound[0].toUpperCase(),
+                                  compound.isEmpty
+                                      ? '?'
+                                      : compound[0].toUpperCase(),
                                   style: TextStyle(
                                     color: compoundColor,
                                     fontSize: 9,
@@ -712,21 +812,29 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: color.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
                                     'L${d.currentLap}',
-                                    style: TextStyle(color: color, fontSize: 10),
+                                    style: TextStyle(
+                                      color: color,
+                                      fontSize: 10,
+                                    ),
                                   ),
                                 ),
                                 if (tyreLife != null)
                                   Text(
                                     '${tyreLife}L old',
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.4),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.4,
+                                      ),
                                       fontSize: 9,
                                     ),
                                   ),
@@ -745,6 +853,7 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
       ),
     );
   }
+
   @override
   void dispose() {
     for (final driver in drivers) {
