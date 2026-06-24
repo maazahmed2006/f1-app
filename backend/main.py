@@ -18,16 +18,11 @@ class F1Telemetry:
         self.total_laps   = int(self.session.laps['LapNumber'].max())
         self.data= {}
          
-    # def display(self):
-    #     laps = self.session.laps.pick_drivers(44)
-    #     telemetry = laps.get_telemetry()
-    #     sessionTime = telemetry['SessionTime'].iloc[-1]
-    #     lap_data = laps.pick_laps(57)
-    #     lap_time = lap_data['LapTime']
-    #     start_time = lap_data['LapStartTime'].iloc[0]
+    def display(self):
+        raceControlMessage = self.session.race_control_messages
 
-    #     duration = (sessionTime - start_time).total_seconds()
-    #     print(lap_time)
+        radioMessage = raceControlMessage[raceControlMessage['Lap'] == 1]
+        print(type(radioMessage['Lap'].iloc[0]))
 
     def lap_process(self, lap_num):
 
@@ -90,7 +85,7 @@ class F1Telemetry:
            
 
 
-                telemetry = telemetry.iloc[::2]
+                telemetry = telemetry.iloc[::5]
                 telemetry = telemetry.dropna(subset=['X', 'Y', 'Speed'])
                     
                 x_vals = telemetry['X'].tolist()
@@ -123,7 +118,9 @@ class F1Telemetry:
 
     def get_circut(self):
         lap = self.session.laps.pick_fastest()
+        
 
+        # pit lane coordinates-----------------------------
         pitIn_lap = self.session.laps.dropna(subset=['PitInTime']).iloc[0]
         pitIn_telemetry = pitIn_lap.get_telemetry().dropna(subset=['X', 'Y'])
 
@@ -138,20 +135,18 @@ class F1Telemetry:
         pitIn_Time = pitIn_lap['PitInTime']
         pitOut_Time = pitOut_lap['PitOutTime']
 
-        # Extend window so pit lane visually connects to the racing line
-        entry_buffer = pd.Timedelta(seconds=5)
-        exit_buffer = pd.Timedelta(seconds=10)
-
         combined = pd.concat([pitIn_telemetry , pitOut_telemetry])
 
         pitLane = combined [
-        (combined['SessionTime'] >= pitIn_Time - entry_buffer) & (combined['SessionTime'] <= pitOut_Time + exit_buffer)
+        (combined['SessionTime'] >= pitIn_Time) & (combined['SessionTime'] <= pitOut_Time)
         ].iloc[::2]
 
         pitLanePoints = [
             {'X' : x , 'Y': y} for x, y in zip(pitLane['X'], pitLane['Y'])
-            ]
-
+            ] 
+        # pit lane coordinates-----------------------------
+        
+        # circuit coordinates------------------------------
         circut_telemetry = lap.get_telemetry().iloc[::5]
 
         if circut_telemetry.empty:
@@ -164,13 +159,33 @@ class F1Telemetry:
             circuitPoints = [
                 {'X' : x , 'Y' : y} for x , y in zip(x_vals , y_vals)
             ]
+        # circuit coordinates------------------------------
+        
+        # corners and dns coordinates-----------------------
+        circuitInfo = self.session.get_circuit_info()
+        cornerInfo = circuitInfo.corners
+
+        if (cornerInfo.empty):
+             cornerData = []
+        else:
+             cornerData = []
+             for _, row in cornerInfo.iterrows():
+                  cornerData.append({
+                    'cornerNumber': int(row['Number']),  # use row, not cornerInfo
+                    'coordinates': {'X': row['X'], 'Y': row['Y']},
+                    'angle':       row['Angle'],
+                    'distance':    row['Distance']
+                })
+        # corners and dns coordinates-----------------------
+
+
 
         return {
             'driverNumber'  : driverName,
             'circuit' : circuitPoints,
-            'pitLane' : pitLanePoints
+            'pitLane' : pitLanePoints,
+            'cornerData' : cornerData
         }
-        
         
     def get_radio(self):
         raceControlMessage = self.session.race_control_messages
@@ -178,22 +193,33 @@ class F1Telemetry:
         print(type(raceControlMessage['Time'].iloc[0]))
         for i in range(self.total_laps):
             radioMessage = raceControlMessage[raceControlMessage['Lap'] == i+1]
+
+            if(radioMessage.empty):
+                    continue
+            
             lapRadioData = []
             lapRadioData.append({
-                'Time' : [t.isoformat() for t in radioMessage['Time']],
+                'LapNo': int(radioMessage['Lap'].iloc[0]) ,
+                'Time' :[ 
+                    (t - self.session.t0_date).total_seconds() for t in radioMessage['Time']
+                    ],
                 'Category' : radioMessage['Category'].tolist() ,
                 'Message' : radioMessage['Message'].tolist(),
-                'Sector' : [None if pd.isna(s) else int(s) for s in radioMessage['Sector']],
+                'Corner' : [None if pd.isna(s) else int(s) for s in radioMessage['Sector']],
             })
             radioData[str(i+1)] = lapRadioData
         
         with open(f"messages.json" , "w") as f:
             json.dump(radioData , f , indent = 2 )
+        return radioData
 
 
 
 
                 
+@app.get("/radio")
+def get_radioData():
+    return f1.get_radio()
 
                 
         
@@ -222,8 +248,8 @@ def load_circut():
         raise HTTPException(status_code = 404 , detail = 'Circut Data Not Found' )
          
     else:
-        # with open(f"circuit.json" , "w") as f: 
-            # json.dump(data , f, indent=2)
+        with open(f"circuit.json" , "w") as f: 
+            json.dump(data , f, indent=2)
         return data
     
 
@@ -246,4 +272,5 @@ def get_info():
 
 f1 = F1Telemetry(2026 ,  4)
 # f1.display()
-
+f1.get_radio()
+# load_circut()
