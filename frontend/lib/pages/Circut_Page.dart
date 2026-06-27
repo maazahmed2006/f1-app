@@ -148,108 +148,84 @@ class CircuitPainter extends CustomPainter {
           ..strokeCap = StrokeCap.round,
       );
     }
-      //sector data
-      if (sector1.isNotEmpty) {
-        final sectorPath = Path();
+    //sector data
+    if (sector1.isNotEmpty) {
+      final sectorPath = Path();
 
-        final first = normalize(
-          Offset(
-            sector1.first['X'] as double,
-            sector1.first['Y'] as double,
-          ),
+      final first = normalize(
+        Offset(sector1.first['X'] as double, sector1.first['Y'] as double),
+      );
+
+      sectorPath.moveTo(first.dx, first.dy);
+
+      for (int i = 1; i < sector1.length; i++) {
+        final current = normalize(
+          Offset(sector1[i]['X'] as double, sector1[i]['Y'] as double),
         );
 
-        sectorPath.moveTo(first.dx, first.dy);
-
-        for (int i = 1; i < sector1.length; i++) {
-          final current = normalize(
-            Offset(
-              sector1[i]['X'] as double,
-              sector1[i]['Y'] as double,
-            ),
-          );
-
-          sectorPath.lineTo(current.dx, current.dy);
-        }
-
-        canvas.drawPath(
-          sectorPath,
-          Paint()
-            ..color = Colors.lightBlueAccent
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2
-            ..strokeCap = StrokeCap.round
-            ..strokeJoin = StrokeJoin.round,
-        );
+        sectorPath.lineTo(current.dx, current.dy);
       }
 
-      if(sector2.isNotEmpty) {
-        final sector2Path = Path();
+      canvas.drawPath(
+        sectorPath,
+        Paint()
+          ..color = Colors.red
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
 
-        final first = normalize(
-          Offset(
-            sector2.first['X'],
-            sector2.first['Y'],
-          ),
-        );
+    if (sector2.isNotEmpty) {
+      final sector2Path = Path();
 
-        sector2Path.moveTo(first.dx, first.dy);
+      final first = normalize(Offset(sector2.first['X'], sector2.first['Y']));
 
-        for (int i = 1; i < sector2.length; i++) {
-          final pos = normalize(
-            Offset(
-              sector2[i]['X'],
-              sector2[i]['Y'],
-            ),
-          );
+      sector2Path.moveTo(first.dx, first.dy);
 
-          sector2Path.lineTo(pos.dx, pos.dy);
-        }
+      for (int i = 1; i < sector2.length; i++) {
+        final pos = normalize(Offset(sector2[i]['X'], sector2[i]['Y']));
 
-        canvas.drawPath(
-          sector2Path,
-          Paint()
-            ..color = Colors.redAccent
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2
-            ..strokeCap = StrokeCap.round
-            ..strokeJoin = StrokeJoin.round,
-        );
+        sector2Path.lineTo(pos.dx, pos.dy);
       }
 
-      if(sector3.isNotEmpty) {
-        final sector3Path = Path();
+      canvas.drawPath(
+        sector2Path,
+        Paint()
+          ..color = Colors.blue
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
 
-        final sec3first = normalize(
-          Offset(
-            sector3.first['X'],
-            sector3.first['Y'],
-          ),
-        );
+    if (sector3.isNotEmpty) {
+      final sector3Path = Path();
 
-        sector3Path.moveTo(sec3first.dx, sec3first.dy);
+      final sec3first = normalize(
+        Offset(sector3.first['X'], sector3.first['Y']),
+      );
 
-        for (int i = 1; i < sector3.length; i++) {
-          final pos = normalize(
-            Offset(
-              sector3[i]['X'],
-              sector3[i]['Y'],
-            ),
-          );
+      sector3Path.moveTo(sec3first.dx, sec3first.dy);
 
-          sector3Path.lineTo(pos.dx, pos.dy);
-        }
+      for (int i = 1; i < sector3.length; i++) {
+        final pos = normalize(Offset(sector3[i]['X'], sector3[i]['Y']));
 
-        canvas.drawPath(
-          sector3Path,
-          Paint()
-            ..color = Colors.yellowAccent
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2
-            ..strokeCap = StrokeCap.round
-            ..strokeJoin = StrokeJoin.round,
-        );
+        sector3Path.lineTo(pos.dx, pos.dy);
       }
+
+      canvas.drawPath(
+        sector3Path,
+        Paint()
+          ..color = Colors.yellowAccent
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
 
     // corners
     for (final corner in cornerData) {
@@ -261,8 +237,7 @@ class CircuitPainter extends CustomPainter {
       canvas.drawCircle(
         pos,
         3,
-        Paint()
-          ..color = Colors.white.withValues(alpha: 0.6),
+        Paint()..color = Colors.white.withValues(alpha: 0.6),
       );
 
       // label
@@ -390,15 +365,25 @@ class DriverPainter extends CustomPainter {
         final pos = normalize(interpolated);
         final color = Color(int.parse(driver.color.replaceAll('#', '0xFF')));
 
-        final bool inPits =
-            driverState.activePitIn != null && driverState.activePitOut != null
-            ? driverState.pitAnimationController.value >=
-                      (driverState.activePitIn! /
-                          (driverState.activePitOut ?? driver.lapDuration)) &&
-                  driverState.pitAnimationController.value <=
-                      (driverState.activePitOut! /
-                          (driverState.activePitOut ?? driver.lapDuration))
-            : false;
+        final bool inPits;
+        if (driverState.activePitIn != null && driverState.activePitOut != null)
+        {
+          inPits = driverState.pitAnimationController.value >=
+                  (driverState.activePitIn! / driverState.activePitOut!) &&
+              driverState.pitAnimationController.value <= 1.0;
+        }
+        else if (driver.pitInTime == null && driver.pitOutTime != null)
+        {
+          inPits = driverState.animationController.value <= (driver.pitOutTime! / driver.lapDuration);
+        }
+        else if (driver.pitInTime != null && driver.pitOutTime == null)
+        {
+          inPits = driverState.animationController.value >= (driver.pitInTime! / driver.lapDuration);
+        }
+        else
+        {
+          inPits = false;
+        }
 
         canvas.drawCircle(
           pos,
@@ -577,7 +562,7 @@ class _RacePageState extends ConsumerState<RacePage>
   List<Offset> coordinates = [];
   List<Offset> pitLaneCoordinates = [];
   List<Map<String, dynamic>> cornerData = [];
-  List sector1 = [] ;
+  List sector1 = [];
   List sector2 = [];
   List sector3 = [];
 
@@ -733,8 +718,6 @@ class _RacePageState extends ConsumerState<RacePage>
                           builder: (context, constraints) {
                             return Stack(
                               children: [
-
-
                                 SizedBox(
                                   width: constraints.maxWidth,
                                   height: constraints.maxHeight,
@@ -743,10 +726,9 @@ class _RacePageState extends ConsumerState<RacePage>
                                       coordinates: coordinates,
                                       pitLaneCoordinates: pitLaneCoordinates,
                                       cornerData: cornerData,
-                                      sector1  : sector1,
-                                      sector2  : sector2,
-                                      sector3  : sector3,
-
+                                      sector1: sector1,
+                                      sector2: sector2,
+                                      sector3: sector3,
                                     ),
                                   ),
                                 ),
@@ -794,9 +776,6 @@ class _RacePageState extends ConsumerState<RacePage>
             ),
     );
   }
-
-
-
 
   Widget _buildLeaderboardDrawer() {
     final active = drivers.where((d) => !d.isRetired).toList()
@@ -1022,7 +1001,6 @@ class _RacePageState extends ConsumerState<RacePage>
     );
   }
 
-
   @override
   void dispose() {
     for (final driver in drivers) {
@@ -1031,4 +1009,3 @@ class _RacePageState extends ConsumerState<RacePage>
     super.dispose();
   }
 }
-
