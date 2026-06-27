@@ -45,33 +45,41 @@ class F1Telemetry:
                 compound = lap_data['Compound'].iloc[0]
                 tyre_life = lap_data['TyreLife'].iloc[0]
                 fresh_tyre = lap_data['FreshTyre'].iloc[0]
-                pit_in_raw = lap_data['PitInTime'].iloc[0]
-                pit_out_raw = lap_data['PitOutTime'].iloc[0]
-                pit_in_raw = lap_data['PitInTime'].iloc[0]
-                
-                if (lap_num == 1):
-                    pit_out_raw = lap_data['PitOutTime'].iloc[0]
-                    if pd.isna(pit_out_raw):
-                        pit_out_raw = None
-                        
-                    next_lap = (lap_num + 1) <= self.total_laps
 
+
+                pit_in_raw = lap_data['PitInTime'].iloc[0]
+                next_lap = (lap_num + 1) <= self.total_laps
+                lap_start_time = lap_data['LapStartTime'].iloc[0]
+                   
+                
+                # FIX 1: Only execute pit start logic if they ACTUALLY started in the pits
+                if lap_num == 1 and not pd.isna(lap_data['PitOutTime'].iloc[0]):
+                    pit_out_raw = lap_data['PitOutTime'].iloc[0]
+
+                # If Lap > 1, OR if it's Lap 1 but they started on the grid and pitted normally
                 else:
                     if (lap_num + 1) <= self.total_laps:
                         next_lap_data = laps.pick_laps(lap_num + 1)
+
                         if next_lap_data.empty:
                             next_lap = False
                             pit_out_raw = None
+
                         else:
                             next_lap = True
-                            pit_out_raw = next_lap_data['PitOutTime'].iloc[0]
+                            if not pd.isna(pit_in_raw):
+                                pit_out_raw = next_lap_data['PitOutTime'].iloc[0]
+                            else:
+                                pit_out_raw = None
+                            
+                            
                             
                     else:
                         next_lap = False
                         pit_out_raw = None
 
+                # Keep your time calculations exactly like this:
                 lap_time = lap_data['LapTime'].iloc[0]
-                lap_start_time = lap_data['LapStartTime'].iloc[0]
 
                 lap_start_seconds = None if pd.isna(lap_start_time) else lap_start_time.total_seconds()
 
@@ -342,4 +350,4 @@ f1 = F1Telemetry(2026 ,  4)
 # f1.get_radio()
 # load_circut()
 
-get_lap_batch(start_lap= 1 , end_lap= 3)
+# get_lap_batch(start_lap= 1 , end_lap= 2)
