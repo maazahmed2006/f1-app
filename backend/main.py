@@ -19,11 +19,12 @@ class F1Telemetry:
         self.data= {}
          
     def display(self):
-        raceControlMessage = self.session.race_control_messages
+        results = self.session.results
+        # print(results[['BroadcastName' , 'GridPosition']])
 
-        radioMessage = raceControlMessage[raceControlMessage['Lap'] == 1]
-        print(type(radioMessage['Lap'].iloc[0]))
-
+        driver = self.session.laps.pick_drivers(30)
+        lapNo = driver[driver['LapNumber'] == 6]
+        print(lapNo['PitInTime'].iloc[0])
     def lap_process(self, lap_num):
 
         
@@ -45,22 +46,29 @@ class F1Telemetry:
                 tyre_life = lap_data['TyreLife'].iloc[0]
                 fresh_tyre = lap_data['FreshTyre'].iloc[0]
                 pit_in_raw = lap_data['PitInTime'].iloc[0]
+                pit_out_raw = lap_data['PitOutTime'].iloc[0]
+                pit_in_raw = lap_data['PitInTime'].iloc[0]
                 
+                if (lap_num == 1):
+                    pit_out_raw = lap_data['PitOutTime'].iloc[0]
+                    if pd.isna(pit_out_raw):
+                        pit_out_raw = None
+                        
+                    next_lap = (lap_num + 1) <= self.total_laps
 
-
-                next_lap = True
-                if (lap_num + 1) <= self.total_laps:
-                    next_lap_data = laps.pick_laps(lap_num + 1)
-                    if  next_lap_data.empty:
+                else:
+                    if (lap_num + 1) <= self.total_laps:
+                        next_lap_data = laps.pick_laps(lap_num + 1)
+                        if next_lap_data.empty:
+                            next_lap = False
+                            pit_out_raw = None
+                        else:
+                            next_lap = True
+                            pit_out_raw = next_lap_data['PitOutTime'].iloc[0]
+                            
+                    else:
                         next_lap = False
                         pit_out_raw = None
-                    else:
-                        next_lap = True
-                        pit_out_raw = next_lap_data['PitOutTime'].iloc[0]
-                        
-                else:
-                    next_lap = False
-                    pit_out_raw = None
 
                 lap_time = lap_data['LapTime'].iloc[0]
                 lap_start_time = lap_data['LapStartTime'].iloc[0]
@@ -178,13 +186,72 @@ class F1Telemetry:
                 })
         # corners and dns coordinates-----------------------
 
+        # sector coordinates
+
+        telemetry = lap.get_telemetry()  
+        sectorData = {} 
+
+        s1_end_time = lap.Sector1Time
+        s2_end_time = lap.Sector1Time + lap.Sector2Time
+        lap_end_time = lap.LapTime
+        
+        s1_telemetry = telemetry[
+            telemetry['Time'] <= s1_end_time
+        ].dropna(subset=['X', 'Y', 'Z'])
+
+        s2_telemetry = telemetry[
+            (telemetry['Time'] > s1_end_time) &
+            (telemetry['Time'] <= s2_end_time)
+        ].dropna(subset=['X', 'Y', 'Z'])
+
+        s3_telemetry = telemetry[
+            (telemetry['Time'] > s2_end_time) &
+            (telemetry['Time'] <= lap_end_time)
+        ].dropna(subset=['X', 'Y', 'Z'])
+
+        print(f"Telemetry Time:{s1_telemetry['Time'].iloc[-1]}")
+
+        print(f"Session Time: {s1_end_time} ")
+
+        sectorData['Sector1'] = [
+
+            {
+                'X' : x ,
+                'Y' : y ,
+            }
+            for x , y in zip(s1_telemetry['X'] , s1_telemetry['Y'])
+        ]
+
+        sectorData['Sector2'] = [
+
+            {
+                'X' : x ,
+                'Y' : y ,
+            }
+            for x , y in zip(s2_telemetry['X'] , s2_telemetry['Y'])
+        ]
+
+
+        sectorData['Sector3'] = [
+
+            {
+                'X' : x ,
+                'Y' : y ,
+            }
+            for x , y in zip(s3_telemetry['X'] , s3_telemetry['Y'])
+        ]
+        # sector coordinates
+        
+
+
 
 
         return {
             'driverNumber'  : driverName,
             'circuit' : circuitPoints,
             'pitLane' : pitLanePoints,
-            'cornerData' : cornerData
+            'cornerData' : cornerData,
+            'sectorData' : sectorData
         }
         
     def get_radio(self):
@@ -272,5 +339,7 @@ def get_info():
 
 f1 = F1Telemetry(2026 ,  4)
 # f1.display()
-f1.get_radio()
+# f1.get_radio()
 # load_circut()
+
+get_lap_batch(start_lap= 1 , end_lap= 3)
