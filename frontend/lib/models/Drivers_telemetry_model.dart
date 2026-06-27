@@ -8,8 +8,8 @@ class DriverTelemetry {
   final int gridPosition;
   final double lapStartTime;
   final double lapDuration;
-  final pitInTime;
-  final pitOutTime;
+  final double? pitInTime;
+  final double? pitOutTime;
   List<Offset?> points = [];
   List<double?> speeds = [];
   final String? compound;

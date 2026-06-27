@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:f1_app/repositories/Driver_telemetry_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/Drivers_telemetry_model.dart';
 import '../repositories/CircutRepository.dart';
@@ -10,9 +11,19 @@ import '../repositories/CircutRepository.dart';
 class CircuitPainter extends CustomPainter {
   final List<Offset> coordinates;
   final List<Offset> pitLaneCoordinates;
-  final List<Map<String , dynamic>> cornerData;
+  final List<Map<String, dynamic>> cornerData;
+  final List sector1;
+  final List sector2;
+  final List sector3;
 
-  CircuitPainter({required this.coordinates, required this.pitLaneCoordinates , required this.cornerData});
+  CircuitPainter({
+    required this.coordinates,
+    required this.pitLaneCoordinates,
+    required this.cornerData,
+    required this.sector1,
+    required this.sector2,
+    required this.sector3,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -37,11 +48,10 @@ class CircuitPainter extends CustomPainter {
     double offsetX = (size.width - dataWidth * scale) / 2;
     double offsetY = (size.height - dataHeight * scale) / 2;
 
-    Offset normalize(Offset p) =>
-        Offset(
-          (p.dx - minX) * scale + offsetX,
-          (p.dy - minY) * scale + offsetY,
-        );
+    Offset normalize(Offset p) => Offset(
+      (p.dx - minX) * scale + offsetX,
+      (p.dy - minY) * scale + offsetY,
+    );
 
     final path = Path();
     path.moveTo(
@@ -138,37 +148,141 @@ class CircuitPainter extends CustomPainter {
           ..strokeCap = StrokeCap.round,
       );
     }
-    //
-      // corners
-      for (final corner in cornerData) {
-        final pos = normalize(Offset(
-          (corner['X'] as double),
-          (corner['Y'] as double),
-        ));
+      //sector data
+      if (sector1.isNotEmpty) {
+        final sectorPath = Path();
 
-        // dot
-        canvas.drawCircle(pos, 3, Paint()
-          ..color = Colors.green.withValues(alpha: 0.6));
-
-        // label
-        final textPainter = TextPainter(
-          text: TextSpan(
-            text: corner['cornerNumber'].toString(),
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 8,
-              fontWeight: FontWeight.bold,
-            ),
+        final first = normalize(
+          Offset(
+            sector1.first['X'] as double,
+            sector1.first['Y'] as double,
           ),
-          textDirection: TextDirection.ltr,
-        )
-          ..layout();
+        );
 
-        textPainter.paint(
-          canvas,
-          Offset(pos.dx + 5, pos.dy - textPainter.height / 2),
+        sectorPath.moveTo(first.dx, first.dy);
+
+        for (int i = 1; i < sector1.length; i++) {
+          final current = normalize(
+            Offset(
+              sector1[i]['X'] as double,
+              sector1[i]['Y'] as double,
+            ),
+          );
+
+          sectorPath.lineTo(current.dx, current.dy);
+        }
+
+        canvas.drawPath(
+          sectorPath,
+          Paint()
+            ..color = Colors.lightBlueAccent
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round,
         );
       }
+
+      if(sector2.isNotEmpty) {
+        final sector2Path = Path();
+
+        final first = normalize(
+          Offset(
+            sector2.first['X'],
+            sector2.first['Y'],
+          ),
+        );
+
+        sector2Path.moveTo(first.dx, first.dy);
+
+        for (int i = 1; i < sector2.length; i++) {
+          final pos = normalize(
+            Offset(
+              sector2[i]['X'],
+              sector2[i]['Y'],
+            ),
+          );
+
+          sector2Path.lineTo(pos.dx, pos.dy);
+        }
+
+        canvas.drawPath(
+          sector2Path,
+          Paint()
+            ..color = Colors.redAccent
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round,
+        );
+      }
+
+      if(sector3.isNotEmpty) {
+        final sector3Path = Path();
+
+        final sec3first = normalize(
+          Offset(
+            sector3.first['X'],
+            sector3.first['Y'],
+          ),
+        );
+
+        sector3Path.moveTo(sec3first.dx, sec3first.dy);
+
+        for (int i = 1; i < sector3.length; i++) {
+          final pos = normalize(
+            Offset(
+              sector3[i]['X'],
+              sector3[i]['Y'],
+            ),
+          );
+
+          sector3Path.lineTo(pos.dx, pos.dy);
+        }
+
+        canvas.drawPath(
+          sector3Path,
+          Paint()
+            ..color = Colors.yellowAccent
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round,
+        );
+      }
+
+    // corners
+    for (final corner in cornerData) {
+      final pos = normalize(
+        Offset((corner['X'] as double), (corner['Y'] as double)),
+      );
+
+      // dot
+      canvas.drawCircle(
+        pos,
+        3,
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.6),
+      );
+
+      // label
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: corner['cornerNumber'].toString(),
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 8,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+
+      textPainter.paint(
+        canvas,
+        Offset(pos.dx + 10, pos.dy - textPainter.height / 2),
+      );
+    }
 
     if (coordinates.length >= 2) {
       final p1 = normalize(coordinates[0]);
@@ -179,11 +293,17 @@ class CircuitPainter extends CustomPainter {
       final dy = p2.dy - p1.dy;
       final len = sqrt(dx * dx + dy * dy);
       final perpX = -dy / len;
-      final perpY =  dx / len;
+      final perpY = dx / len;
 
       final lineLength = 8.0;
-      final start = Offset(p1.dx + perpX * lineLength, p1.dy + perpY * lineLength);
-      final end   = Offset(p1.dx - perpX * lineLength, p1.dy - perpY * lineLength);
+      final start = Offset(
+        p1.dx + perpX * lineLength,
+        p1.dy + perpY * lineLength,
+      );
+      final end = Offset(
+        p1.dx - perpX * lineLength,
+        p1.dy - perpY * lineLength,
+      );
 
       // // glow
       // canvas.drawLine(start, end, Paint()
@@ -193,20 +313,22 @@ class CircuitPainter extends CustomPainter {
 
       // checkered white/red line
 
-      canvas.drawLine(start, end, Paint()
-        ..color       = Colors.white.withValues(alpha: 0.9)
-        ..strokeWidth = 1.5
-        ..strokeCap   = StrokeCap.round);
-
-
+      canvas.drawLine(
+        start,
+        end,
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.9)
+          ..strokeWidth = 1.5
+          ..strokeCap = StrokeCap.round,
+      );
     }
   }
 
   @override
   bool shouldRepaint(CircuitPainter oldDelegate) =>
       oldDelegate.coordinates != coordinates ||
-          oldDelegate.pitLaneCoordinates != pitLaneCoordinates ||
-          oldDelegate.cornerData != cornerData;
+      oldDelegate.pitLaneCoordinates != pitLaneCoordinates ||
+      oldDelegate.cornerData != cornerData;
 }
 
 class DriverPainter extends CustomPainter {
@@ -443,17 +565,21 @@ class DriverState {
   }
 }
 
-class RacePage extends StatefulWidget {
+class RacePage extends ConsumerStatefulWidget {
   const RacePage({super.key});
 
   @override
-  State<RacePage> createState() => _RacePageState();
+  ConsumerState<RacePage> createState() => _RacePageState();
 }
 
-class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
+class _RacePageState extends ConsumerState<RacePage>
+    with TickerProviderStateMixin {
   List<Offset> coordinates = [];
   List<Offset> pitLaneCoordinates = [];
-  List<Map<String , dynamic>> cornerData = [];
+  List<Map<String, dynamic>> cornerData = [];
+  List sector1 = [] ;
+  List sector2 = [];
+  List sector3 = [];
 
   bool loading = true;
   Map<String, List<DriverTelemetry>> allData = {};
@@ -512,7 +638,15 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
     final model = await CircuitModelRepository().getCircutModel();
     coordinates = model.circuit;
     pitLaneCoordinates = model.pitLane ?? [];
-    cornerData = model.cornerData ;
+    cornerData = model.cornerData;
+    sector1 = model.sector1;
+    sector2 = model.sector2;
+    sector3 = model.sector3;
+  }
+
+  double elapsedTime(DriverState d) {
+    return d.currentTelemetry.lapStartTime +
+        (d.animationController.value * d.currentTelemetry.lapDuration);
   }
 
   @override
@@ -589,6 +723,7 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
+
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -598,6 +733,8 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                           builder: (context, constraints) {
                             return Stack(
                               children: [
+
+
                                 SizedBox(
                                   width: constraints.maxWidth,
                                   height: constraints.maxHeight,
@@ -606,6 +743,10 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                                       coordinates: coordinates,
                                       pitLaneCoordinates: pitLaneCoordinates,
                                       cornerData: cornerData,
+                                      sector1  : sector1,
+                                      sector2  : sector2,
+                                      sector3  : sector3,
+
                                     ),
                                   ),
                                 ),
@@ -619,6 +760,28 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
+                                // asyncRadioData.when(
+                                //   data: (radioList) => SizedBox(
+                                //     height: 40,
+                                //     child: ListView.builder(
+                                //       scrollDirection: Axis.vertical,
+                                //       itemCount: radioList.length,
+                                //       itemBuilder: (context, index) {
+                                //         return Padding(
+                                //           padding: const EdgeInsets.only(right: 16),
+                                //           child: Center(
+                                //             child: Text(
+                                //               radioList[index].message.first,
+                                //               style: const TextStyle(color: Colors.white70, fontSize: 11),
+                                //             ),
+                                //           ),
+                                //         );
+                                //       },
+                                //     ),
+                                //   ),
+                                //   error: (e, _) => Text(e.toString(), style: TextStyle(color: Colors.red)),
+                                //   loading: () => const SizedBox.shrink(),
+                                // ),
                               ],
                             );
                           },
@@ -631,6 +794,9 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
             ),
     );
   }
+
+
+
 
   Widget _buildLeaderboardDrawer() {
     final active = drivers.where((d) => !d.isRetired).toList()
@@ -765,7 +931,9 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
                                     Text(
                                       'RETIRED — Lap ${d.retiredAtLap ?? d.currentLap}',
                                       style: TextStyle(
-                                        color: Colors.red.withValues(alpha: 0.7),
+                                        color: Colors.red.withValues(
+                                          alpha: 0.7,
+                                        ),
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -854,6 +1022,7 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
     );
   }
 
+
   @override
   void dispose() {
     for (final driver in drivers) {
@@ -862,3 +1031,4 @@ class _RacePageState extends State<RacePage> with TickerProviderStateMixin {
     super.dispose();
   }
 }
+

@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class CircuitModelRepository {
 
   Future<CircuitModel> getCircutModel() async {
-    final url = Uri.parse('http://192.168.18.12:8080/circuit');
+    final url = Uri.parse('http://192.168.18.12:8000/circuit');
 
     try {
       final response = await http.get(url).timeout(Duration(seconds: 10));
@@ -17,17 +17,17 @@ class CircuitModelRepository {
         return CircuitModel.fromJson(responseBody);
       } else {
         final error = jsonDecode(response.body);
-        throw Exception("Server error ${response.statusCode}: ${error['detail']}");
+        throw ("Server error ${response.statusCode}: ${error['detail']}");
       }
     }
     on TimeoutException {
-      throw Exception("Server timed out");
+      throw "Server timed out" ;
     }
     on SocketException {
-      throw Exception("Oops! No Internet");
+      throw "Oops! No Internet" ;
     }
-    catch (e) {
-      throw Exception(e);
+    catch (e){
+      rethrow;
     }
   }
 }

@@ -8,7 +8,7 @@ class DriversRaceInfo {
     List<Map<String, dynamic>> drivers = [];
 
     try {
-      final url = Uri.parse('http://192.168.18.12:8080/info');
+      final url = Uri.parse('http://192.168.18.12:8000/info');
 
       final response = await http.get(url);
 
