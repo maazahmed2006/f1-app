@@ -3,7 +3,7 @@ from fastapi import FastAPI , HTTPException
 import pandas as pd
 import json
 
-# CACHE_DIR = "C:/Users/Hamza 2/Documents/fastf1_cache"
+# CACHE_DIR = "C:/Your-Directory"
 # fastf1.Cache.enable_cache(CACHE_DIR) 
 
 app = FastAPI()
