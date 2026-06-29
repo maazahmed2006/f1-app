@@ -8,8 +8,7 @@ import 'package:http/http.dart' as http;
 class CircuitModelRepository {
 
   Future<CircuitModel> getCircutModel() async {
-    final url = Uri.parse('http://192.168.18.12:8000/circuit');
-
+    final url = Uri.parse('http://YOUR_IP_ADDRESS:YOUR_PORT/circuit');
     try {
       final response = await http.get(url).timeout(Duration(seconds: 10));
       if (response.statusCode == 200) {
