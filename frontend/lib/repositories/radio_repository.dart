@@ -9,7 +9,7 @@ class RadioDataRepository {
 
   Future <List<RadioData>> getRadioData() async {
 
-    final url = Uri.parse('http://192.168.18.12:8000/radio');
+    final url = Uri.parse('http://YOUR_IP_ADDRESS:YOUR_PORT/radio');
     final List<RadioData> radioData = [];
 
     try {
