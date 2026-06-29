@@ -46,6 +46,8 @@ Lap-by-lap telemetry insights
 
 ![WhatsApp Image 2026-03-24 at 3 45 55 PM (2)](https://github.com/user-attachments/assets/465fe87d-874a-414c-bd8d-2aaccfd06aae)
 
+<img width="720" height="1600" alt="WhatsApp Image 2026-06-29 at 10 38 02 PM" src="https://github.com/user-attachments/assets/740c2a85-0578-4382-8779-31dff6e72261" />
+
 ---
 
 ## ⚙️ Installation
