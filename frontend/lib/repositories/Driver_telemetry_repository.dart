@@ -7,7 +7,7 @@ class DriverTelemetryRepository {
 
   Future <Map<String, List<DriverTelemetry>>> getTelemetry(
       {required int startLap , required int endLap  }) async {
-    String url = 'http://192.168.18.12:8000/laps/batch/${startLap}/${endLap}';
+    String url = 'http://YOUR_IP_ADDRESS:YOUR_PORT/laps/batch/${startLap}/${endLap}';
     final parsedUrl = Uri.parse(url);
     final response = await http.get(parsedUrl);
     final Map<String, List<DriverTelemetry>> results = {};
